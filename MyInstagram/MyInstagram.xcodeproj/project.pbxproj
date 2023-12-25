@@ -13,6 +13,7 @@
 		F721F8942B2F574300652917 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F721F8922B2F574300652917 /* Main.storyboard */; };
 		F721F8962B2F574600652917 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F721F8952B2F574600652917 /* Assets.xcassets */; };
 		F721F8992B2F574600652917 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F721F8972B2F574600652917 /* LaunchScreen.storyboard */; };
+		F721F8A12B2F5A1500652917 /* SplashScreenViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F721F8A02B2F5A1500652917 /* SplashScreenViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -24,6 +25,7 @@
 		F721F8952B2F574600652917 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		F721F8982B2F574600652917 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		F721F89A2B2F574600652917 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		F721F8A02B2F5A1500652917 /* SplashScreenViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashScreenViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -59,6 +61,7 @@
 				F721F88C2B2F574300652917 /* AppDelegate.swift */,
 				F721F88E2B2F574300652917 /* SceneDelegate.swift */,
 				F721F8902B2F574300652917 /* ViewController.swift */,
+				F721F8A02B2F5A1500652917 /* SplashScreenViewController.swift */,
 				F721F8922B2F574300652917 /* Main.storyboard */,
 				F721F8952B2F574600652917 /* Assets.xcassets */,
 				F721F8972B2F574600652917 /* LaunchScreen.storyboard */,
@@ -141,6 +144,7 @@
 				F721F8912B2F574300652917 /* ViewController.swift in Sources */,
 				F721F88D2B2F574300652917 /* AppDelegate.swift in Sources */,
 				F721F88F2B2F574300652917 /* SceneDelegate.swift in Sources */,
+				F721F8A12B2F5A1500652917 /* SplashScreenViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
