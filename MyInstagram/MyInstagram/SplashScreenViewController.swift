@@ -13,19 +13,20 @@ class SplashScreenViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        view.backgroundColor = .systemBackground
         logoViewParameters()
     }
     
     private func logoViewParameters(){
         logoView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(logoView)
-        logoView.heightAnchor.constraint(equalTo: logoView.widthAnchor, multiplier: 1, constant: 50).isActive = true
-//        NSLayoutConstraint.activate([
-//            logoView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-//            logoView.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: -100),
-//            logoView.heightAnchor.constraint(equalTo: logoView.widthAnchor, multiplier: 1, constant: 1)
-//        ])
-        logoView.contentMode = .scaleAspectFit
-        logoView.image = UIImage(resource: .logo)
+        NSLayoutConstraint.activate([
+            logoView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            logoView.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: -50),
+            logoView.heightAnchor.constraint(equalTo: logoView.widthAnchor, multiplier: 1),
+            logoView.heightAnchor.constraint(equalToConstant: 150)
+        ])
+       
+        logoView.image = UIImage(resource: .logo1)
     }
 }
