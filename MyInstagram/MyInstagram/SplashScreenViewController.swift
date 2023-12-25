@@ -26,7 +26,10 @@ class SplashScreenViewController: UIViewController {
             logoView.heightAnchor.constraint(equalTo: logoView.widthAnchor, multiplier: 1),
             logoView.heightAnchor.constraint(equalToConstant: 150)
         ])
-       
+        let nextVC = ViewController()
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2){
+            self.navigationController?.pushViewController(nextVC, animated: false)
+        }
         logoView.image = UIImage(resource: .logo1)
     }
 }

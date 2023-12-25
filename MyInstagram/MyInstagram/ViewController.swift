@@ -11,7 +11,8 @@ class ViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        view.backgroundColor = .systemBackground
+        self.navigationController?.setNavigationBarHidden(true, animated: false)
     }
 
 }
