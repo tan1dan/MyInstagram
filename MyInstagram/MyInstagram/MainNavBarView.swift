@@ -7,15 +7,22 @@
 
 import UIKit
 
+protocol MainBarViewDelegate: AnyObject {
+    func buttonAddPostPressed(_ sender: MainNavBarView)
+    func buttonLikePressed(_ sender: MainNavBarView)
+    func buttonMessagePressed(_ sender: MainNavBarView)
+}
+
 class MainNavBarView: UIView {
     
     let label = UILabel()
-    let buttonAddPost = UIButton()
-    let buttonLike = UIButton()
-    let buttonMessage = UIButton()
-    
+    let buttonAddPost = UIButton(type: .system)
+    let buttonLike = UIButton(type: .system)
+    let buttonMessage = UIButton(type: .system)
+    weak var delegate: MainBarViewDelegate?
     override init(frame: CGRect) {
         super.init(frame: frame)
+        
         constraints()
         buttonParameters()
         labelParameters()
@@ -69,18 +76,22 @@ class MainNavBarView: UIView {
         buttonMessage.contentVerticalAlignment = .fill
         buttonMessage.contentHorizontalAlignment = .fill
         buttonMessage.contentMode = .scaleAspectFill
+        buttonMessage.addTarget(self, action: #selector(buttonMessageTapped), for: .touchUpInside)
         
         buttonLike.setImage(UIImage(systemName: "heart"), for: .normal)
         buttonLike.tintColor = .black
         buttonLike.contentVerticalAlignment = .fill
         buttonLike.contentHorizontalAlignment = .fill
         buttonLike.contentMode = .scaleAspectFill
+        buttonLike.addTarget(self, action: #selector(buttonLikeTapped), for: .touchUpInside)
         
         buttonAddPost.setImage(UIImage(systemName: "plus.viewfinder"), for: .normal)
         buttonAddPost.tintColor = .black
         buttonAddPost.contentVerticalAlignment = .fill
         buttonAddPost.contentHorizontalAlignment = .fill
         buttonAddPost.contentMode = .scaleAspectFill
+        buttonAddPost.addTarget(self, action: #selector(buttonAddPostTapped), for: .touchUpInside)
+        
     }
     
     func labelParameters(){
@@ -93,4 +104,15 @@ class MainNavBarView: UIView {
             label.font = lobsterFont
         }
     }
+    
+    @objc func buttonAddPostTapped(){
+        delegate?.buttonAddPostPressed(self)
+    }
+    @objc func buttonLikeTapped(){
+        delegate?.buttonLikePressed(self)
+    }
+    @objc func buttonMessageTapped(){
+        delegate?.buttonMessagePressed(self)
+    }
+    
 }
