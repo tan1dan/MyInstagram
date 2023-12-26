@@ -15,6 +15,11 @@ class SplashScreenViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
         logoViewParameters()
+        
+        let nextVC = ViewController()
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2){
+            self.navigationController?.pushViewController(nextVC, animated: false)
+        }
     }
     
     private func logoViewParameters(){
@@ -26,7 +31,7 @@ class SplashScreenViewController: UIViewController {
             logoView.heightAnchor.constraint(equalTo: logoView.widthAnchor, multiplier: 1),
             logoView.heightAnchor.constraint(equalToConstant: 150)
         ])
-       
+        
         logoView.image = UIImage(resource: .logo1)
     }
 }
