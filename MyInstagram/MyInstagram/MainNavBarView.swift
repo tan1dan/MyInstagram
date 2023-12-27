@@ -20,12 +20,19 @@ class MainNavBarView: UIView {
     let buttonLike = UIButton(type: .system)
     let buttonMessage = UIButton(type: .system)
     weak var delegate: MainBarViewDelegate?
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         
         constraints()
         buttonParameters()
         labelParameters()
+        if self.traitCollection.userInterfaceStyle == .light {
+            lightMode()
+            
+        } else {
+            darkMode()
+        }
     }
     
     required init?(coder: NSCoder) {
@@ -115,4 +122,16 @@ class MainNavBarView: UIView {
         delegate?.buttonMessagePressed(self)
     }
     
+    func lightMode(){
+        buttonAddPost.tintColor = .black
+        buttonLike.tintColor = .black
+        buttonMessage.tintColor = .black
+        label.textColor = .black
+    }
+    func darkMode(){
+        buttonAddPost.tintColor = .white
+        buttonLike.tintColor = .white
+        buttonMessage.tintColor = .white
+        label.textColor = .white
+    }
 }

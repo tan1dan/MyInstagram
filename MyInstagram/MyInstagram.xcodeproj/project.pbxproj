@@ -16,6 +16,7 @@
 		F721F8A12B2F5A1500652917 /* SplashScreenViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F721F8A02B2F5A1500652917 /* SplashScreenViewController.swift */; };
 		F721F8C52B3A3E9C00652917 /* MainNavBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F721F8C42B3A3E9C00652917 /* MainNavBarView.swift */; };
 		F721F8CF2B3A617F00652917 /* Lobster-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F721F8CE2B3A5FEA00652917 /* Lobster-Regular.ttf */; };
+		F721F8D12B3C07D100652917 /* StoryCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F721F8D02B3C07D100652917 /* StoryCollectionViewCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -30,6 +31,7 @@
 		F721F8A02B2F5A1500652917 /* SplashScreenViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashScreenViewController.swift; sourceTree = "<group>"; };
 		F721F8C42B3A3E9C00652917 /* MainNavBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainNavBarView.swift; sourceTree = "<group>"; };
 		F721F8CE2B3A5FEA00652917 /* Lobster-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Lobster-Regular.ttf"; sourceTree = "<group>"; };
+		F721F8D02B3C07D100652917 /* StoryCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoryCollectionViewCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -67,6 +69,7 @@
 				F721F8902B2F574300652917 /* ViewController.swift */,
 				F721F8A02B2F5A1500652917 /* SplashScreenViewController.swift */,
 				F721F8C42B3A3E9C00652917 /* MainNavBarView.swift */,
+				F721F8D02B3C07D100652917 /* StoryCollectionViewCell.swift */,
 				F721F8C92B3A4B0300652917 /* Fonts */,
 				F721F8952B2F574600652917 /* Assets.xcassets */,
 				F721F8922B2F574300652917 /* Main.storyboard */,
@@ -160,6 +163,7 @@
 				F721F8C52B3A3E9C00652917 /* MainNavBarView.swift in Sources */,
 				F721F88D2B2F574300652917 /* AppDelegate.swift in Sources */,
 				F721F88F2B2F574300652917 /* SceneDelegate.swift in Sources */,
+				F721F8D12B3C07D100652917 /* StoryCollectionViewCell.swift in Sources */,
 				F721F8A12B2F5A1500652917 /* SplashScreenViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

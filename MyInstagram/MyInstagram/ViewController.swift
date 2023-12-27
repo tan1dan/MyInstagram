@@ -32,7 +32,7 @@ class ViewController: UIViewController {
             }
         })
         
-        func lightMode(){
+       func lightMode(){
             self.navBarView.buttonAddPost.tintColor = .black
             self.navBarView.buttonLike.tintColor = .black
             self.navBarView.buttonMessage.tintColor = .black
