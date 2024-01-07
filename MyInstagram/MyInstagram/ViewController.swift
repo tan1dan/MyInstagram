@@ -9,18 +9,21 @@ import UIKit
 
 enum Section: Hashable, CaseIterable {
     case first
+    case second
 }
 
 class ViewController: UIViewController, UICollectionViewDelegate {
     let navBarView = MainNavBarView()
     lazy var storyCollectionView = UICollectionView(frame: .zero, collectionViewLayout: getCompositionalLayout())
+    
     var collectionDataSource: UICollectionViewDiffableDataSource<Section, StoryCellItem>!
     var titleItems: [StoryCellItem] = []
+    var postItems: [StoryCellItem] = []
     override func viewDidLoad() {
         super.viewDidLoad()
         
         view.backgroundColor = .systemBackground
-        fillTitleItems()
+        fillItems()
         
         registerForTraitChanges([UITraitUserInterfaceStyle.self], handler: { (self: Self, previousTraitCollection: UITraitCollection) in
             if self.traitCollection.userInterfaceStyle == .light {
@@ -38,17 +41,30 @@ class ViewController: UIViewController, UICollectionViewDelegate {
         let cellRegistration = UICollectionView.CellRegistration<StoryCollectionViewCell, StoryCellItem> {
             cell, indexPath, itemIdentifier in
             cell.nicknameLabel.text = itemIdentifier.title
-            
+        }
+        
+        let secondCellRegistration = UICollectionView.CellRegistration<PostCollectionViewCell, StoryCellItem> {
+            cell, IndexPath, itemIdentifier in
+            cell.imageView.image = itemIdentifier.image
+            cell.postCommentsView.likeLabel.text = itemIdentifier.likeText
+            cell.postCommentsView.bodyLabel.text = itemIdentifier.bodyText
+            cell.postHeadBarView.authorLabel.text = itemIdentifier.title
         }
         
         collectionDataSource = UICollectionViewDiffableDataSource(collectionView: storyCollectionView) { (collectionView: UICollectionView, indexPath: IndexPath, itemIdentifier: StoryCellItem) -> UICollectionViewCell? in
-            let cell = collectionView.dequeueConfiguredReusableCell(using: cellRegistration, for: indexPath, item: itemIdentifier)
+            if indexPath.section == 0 {
+                let cell = collectionView.dequeueConfiguredReusableCell(using: cellRegistration, for: indexPath, item: itemIdentifier)
                 return cell
+            } else {
+                let cell = collectionView.dequeueConfiguredReusableCell(using: secondCellRegistration, for: indexPath, item: itemIdentifier)
+                return cell
+            }
         }
         
         var firstSnapshot = NSDiffableDataSourceSnapshot<Section, StoryCellItem>()
-        firstSnapshot.appendSections([.first])
+        firstSnapshot.appendSections([.first, .second])
         firstSnapshot.appendItems(titleItems, toSection: .first)
+        firstSnapshot.appendItems(postItems, toSection: .second)
         collectionDataSource.apply(firstSnapshot, animatingDifferences: true)
     }
     
@@ -65,8 +81,8 @@ class ViewController: UIViewController, UICollectionViewDelegate {
             
             storyCollectionView.topAnchor.constraint(equalTo: navBarView.bottomAnchor),
             storyCollectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            storyCollectionView.trailingAnchor.constraint(equalTo: vцiew.trailingAnchor),
-            storyCollectionView.heightAnchor.constraint(equalToConstant: 110)
+            storyCollectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            storyCollectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
     }
     
@@ -87,28 +103,43 @@ class ViewController: UIViewController, UICollectionViewDelegate {
     func getCompositionalLayout() -> UICollectionViewCompositionalLayout {
         return UICollectionViewCompositionalLayout { (section, environment) ->
             NSCollectionLayoutSection? in
-            let itemSize = NSCollectionLayoutSize(widthDimension: .estimated(1), heightDimension: .fractionalHeight(1))
-            let item = NSCollectionLayoutItem(layoutSize: itemSize)
-            let groupSize = NSCollectionLayoutSize(widthDimension: .estimated(1), heightDimension: .fractionalHeight(1))
-            let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
-            let layoutSection = NSCollectionLayoutSection(group: group)
-            layoutSection.interGroupSpacing = 5
-            layoutSection.orthogonalScrollingBehavior = .continuous
-            return layoutSection
+            if section == 0 {
+                let itemSize = NSCollectionLayoutSize(widthDimension: .estimated(1), heightDimension: .fractionalHeight(1))
+                let item = NSCollectionLayoutItem(layoutSize: itemSize)
+                let groupSize = NSCollectionLayoutSize(widthDimension: .estimated(1), heightDimension: .fractionalHeight(1/7))
+                let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
+                let layoutSection = NSCollectionLayoutSection(group: group)
+                layoutSection.interGroupSpacing = 5
+                layoutSection.orthogonalScrollingBehavior = .continuous
+                return layoutSection
+            } else {
+                let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .fractionalHeight(1))
+                let item = NSCollectionLayoutItem(layoutSize: itemSize)
+                let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .fractionalHeight(1))
+                let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
+                let layoutSection = NSCollectionLayoutSection(group: group)
+                layoutSection.interGroupSpacing = 5
+                
+                return layoutSection
+            }
         }
     }
     
     func storyCollectionViewParameters(){
         storyCollectionView.delegate = self
         storyCollectionView.register(StoryCollectionViewCell.self, forCellWithReuseIdentifier: StoryCollectionViewCell.id)
+        storyCollectionView.register(PostCollectionViewCell.self, forCellWithReuseIdentifier: PostCollectionViewCell.id)
     }
     
     func navControllerParameters(){
         self.navigationController?.setNavigationBarHidden(true, animated: false)
     }
-    func fillTitleItems(){
+    
+    func fillItems(){
         for i in 1...10{
             titleItems.append(StoryCellItem(title: "avatar\(i)"))
+            postItems.append(StoryCellItem(image: UIImage(resource: .post), title: "Arisha\(i)", likeText: "Likes: \(i)", bodyText: "NAME lsalkjadjald test text"))
         }
+        print(postItems)
     }
 }

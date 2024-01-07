@@ -28,13 +28,13 @@ class StoryCollectionViewCell: UICollectionViewCell {
         avatarViewParameters()
         backgroundLayerParameters()
         nicknameLabelParameters()
-        avatarView.layer.cornerRadius = CGFloat(avatarView.frame.size.width / 2)
+        
     }
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func constraints(){
+    private func constraints(){
         addSubview(avatarView)
         addSubview(nicknameLabel)
         avatarView.translatesAutoresizingMaskIntoConstraints = false
@@ -48,20 +48,20 @@ class StoryCollectionViewCell: UICollectionViewCell {
             nicknameLabel.topAnchor.constraint(equalTo: avatarView.bottomAnchor, constant: 5),
             nicknameLabel.leadingAnchor.constraint(equalTo: leadingAnchor),
             nicknameLabel.trailingAnchor.constraint(equalTo: trailingAnchor),
-            nicknameLabel.bottomAnchor.constraint(equalTo: bottomAnchor),
-//            nicknameLabel.heightAnchor.constraint(equalToConstant: 10)
+            nicknameLabel.bottomAnchor.constraint(equalTo: bottomAnchor)
         ])
     }
     
-    func avatarViewParameters(){
+    private func avatarViewParameters(){
         avatarView.image = UIImage(resource: .avatar)
         avatarView.clipsToBounds = true
         avatarView.contentMode = .scaleToFill
         avatarView.layer.borderColor = UIColor.systemBackground.cgColor
         avatarView.layer.borderWidth = 3
+        avatarView.layer.cornerRadius = CGFloat(avatarView.frame.size.width / 2)
     }
     
-    func backgroundLayerParameters(){
+    private func backgroundLayerParameters(){
         backgroundLayer.frame = CGRect(x: avatarView.frame.origin.x, y: avatarView.frame.origin.y, width: avatarView.frame.width + 5, height: avatarView.frame.height + 5)
         backgroundLayer.cornerRadius = CGFloat(avatarView.frame.width / 2)
         
@@ -78,7 +78,7 @@ class StoryCollectionViewCell: UICollectionViewCell {
         backgroundLayer.startPoint = CGPoint(x: 0, y: 0)
         backgroundLayer.endPoint = CGPoint(x: 1, y: 0)
     }
-    func nicknameLabelParameters(){
+    private func nicknameLabelParameters(){
         nicknameLabel.textAlignment = .center
         nicknameLabel.setContentCompressionResistancePriority(UILayoutPriority(1000), for: .vertical)
         nicknameLabel.setContentHuggingPriority(UILayoutPriority(1000), for: .vertical)
