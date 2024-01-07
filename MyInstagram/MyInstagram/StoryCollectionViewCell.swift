@@ -28,7 +28,6 @@ class StoryCollectionViewCell: UICollectionViewCell {
         avatarViewParameters()
         backgroundLayerParameters()
         nicknameLabelParameters()
-        
     }
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -46,14 +45,14 @@ class StoryCollectionViewCell: UICollectionViewCell {
             avatarView.heightAnchor.constraint(equalTo: avatarView.widthAnchor, multiplier: 1),
             
             nicknameLabel.topAnchor.constraint(equalTo: avatarView.bottomAnchor, constant: 5),
-            nicknameLabel.leadingAnchor.constraint(equalTo: leadingAnchor),
-            nicknameLabel.trailingAnchor.constraint(equalTo: trailingAnchor),
+            nicknameLabel.leadingAnchor.constraint(equalTo: avatarView.leadingAnchor),
+            nicknameLabel.trailingAnchor.constraint(equalTo: avatarView.trailingAnchor),
             nicknameLabel.bottomAnchor.constraint(equalTo: bottomAnchor)
         ])
     }
     
     private func avatarViewParameters(){
-        avatarView.image = UIImage(resource: .avatar)
+        avatarView.image = UIImage(resource: .avatar1)
         avatarView.clipsToBounds = true
         avatarView.contentMode = .scaleToFill
         avatarView.layer.borderColor = UIColor.systemBackground.cgColor
@@ -78,6 +77,7 @@ class StoryCollectionViewCell: UICollectionViewCell {
         backgroundLayer.startPoint = CGPoint(x: 0, y: 0)
         backgroundLayer.endPoint = CGPoint(x: 1, y: 0)
     }
+    
     private func nicknameLabelParameters(){
         nicknameLabel.textAlignment = .center
         nicknameLabel.setContentCompressionResistancePriority(UILayoutPriority(1000), for: .vertical)

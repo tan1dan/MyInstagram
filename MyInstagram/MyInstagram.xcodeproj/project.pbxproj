@@ -22,6 +22,7 @@
 		F721F8D72B41A22200652917 /* PostHeadBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F721F8D62B41A22200652917 /* PostHeadBarView.swift */; };
 		F721F8D92B41D26200652917 /* PostBottomBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F721F8D82B41D26200652917 /* PostBottomBarView.swift */; };
 		F721F8FB2B4442CE00652917 /* PostCommentsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F721F8FA2B4442CE00652917 /* PostCommentsView.swift */; };
+		F721F8FD2B4AC85F00652917 /* ToolBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F721F8FC2B4AC85F00652917 /* ToolBarView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -42,6 +43,7 @@
 		F721F8D62B41A22200652917 /* PostHeadBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostHeadBarView.swift; sourceTree = "<group>"; };
 		F721F8D82B41D26200652917 /* PostBottomBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostBottomBarView.swift; sourceTree = "<group>"; };
 		F721F8FA2B4442CE00652917 /* PostCommentsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostCommentsView.swift; sourceTree = "<group>"; };
+		F721F8FC2B4AC85F00652917 /* ToolBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolBarView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -85,6 +87,7 @@
 				F721F8D62B41A22200652917 /* PostHeadBarView.swift */,
 				F721F8D82B41D26200652917 /* PostBottomBarView.swift */,
 				F721F8FA2B4442CE00652917 /* PostCommentsView.swift */,
+				F721F8FC2B4AC85F00652917 /* ToolBarView.swift */,
 				F721F8C92B3A4B0300652917 /* Fonts */,
 				F721F8952B2F574600652917 /* Assets.xcassets */,
 				F721F8922B2F574300652917 /* Main.storyboard */,
@@ -180,6 +183,7 @@
 				F721F8C52B3A3E9C00652917 /* MainNavBarView.swift in Sources */,
 				F721F8D72B41A22200652917 /* PostHeadBarView.swift in Sources */,
 				F721F8D32B3C1BB600652917 /* StoryCellItemStruct.swift in Sources */,
+				F721F8FD2B4AC85F00652917 /* ToolBarView.swift in Sources */,
 				F721F88D2B2F574300652917 /* AppDelegate.swift in Sources */,
 				F721F8D52B41A1B600652917 /* PostCollectionViewCell.swift in Sources */,
 				F721F88F2B2F574300652917 /* SceneDelegate.swift in Sources */,

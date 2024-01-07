@@ -9,10 +9,10 @@ import UIKit
 
 class PostBottomBarView: UIView {
     
-    let buttonLike = UIButton()
-    let buttonComment = UIButton()
-    let buttonSend = UIButton()
-    let buttonBookmarks = UIButton()
+    let buttonLike = UIButton(type: .system)
+    let buttonComment = UIButton(type: .system)
+    let buttonSend = UIButton(type: .system)
+    let buttonBookmarks = UIButton(type: .system)
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -37,24 +37,24 @@ class PostBottomBarView: UIView {
         addSubview(buttonBookmarks)
         
         NSLayoutConstraint.activate([
-            buttonLike.topAnchor.constraint(equalTo: topAnchor),
-            buttonLike.bottomAnchor.constraint(equalTo: bottomAnchor),
-            buttonLike.leadingAnchor.constraint(equalTo: leadingAnchor),
-            buttonLike.heightAnchor.constraint(equalTo: buttonLike.widthAnchor, multiplier: 1),
+            buttonLike.topAnchor.constraint(equalTo: topAnchor, constant: 7.5),
+            buttonLike.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -7.5),
+            buttonLike.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 5),
+            buttonLike.heightAnchor.constraint(equalTo: buttonLike.widthAnchor, multiplier: 1/1.15),
             
-            buttonComment.topAnchor.constraint(equalTo: topAnchor),
-            buttonComment.bottomAnchor.constraint(equalTo: bottomAnchor),
-            buttonComment.leadingAnchor.constraint(equalTo: buttonLike.trailingAnchor, constant: 5),
+            buttonComment.topAnchor.constraint(equalTo: topAnchor, constant: 7),
+            buttonComment.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -7),
+            buttonComment.leadingAnchor.constraint(equalTo: buttonLike.trailingAnchor, constant: 15),
             buttonComment.heightAnchor.constraint(equalTo: buttonComment.widthAnchor, multiplier: 1),
             
-            buttonSend.topAnchor.constraint(equalTo: topAnchor),
-            buttonSend.bottomAnchor.constraint(equalTo: bottomAnchor),
-            buttonSend.leadingAnchor.constraint(equalTo: buttonComment.trailingAnchor, constant: 5),
+            buttonSend.topAnchor.constraint(equalTo: topAnchor, constant: 7),
+            buttonSend.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -7),
+            buttonSend.leadingAnchor.constraint(equalTo: buttonComment.trailingAnchor, constant: 15),
             buttonSend.heightAnchor.constraint(equalTo: buttonSend.widthAnchor, multiplier: 1),
             
-            buttonBookmarks.topAnchor.constraint(equalTo: topAnchor),
-            buttonBookmarks.bottomAnchor.constraint(equalTo: bottomAnchor),
-            buttonBookmarks.trailingAnchor.constraint(equalTo: trailingAnchor),
+            buttonBookmarks.topAnchor.constraint(equalTo: topAnchor, constant: 7),
+            buttonBookmarks.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -7),
+            buttonBookmarks.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -10),
             buttonBookmarks.heightAnchor.constraint(equalTo: buttonBookmarks.widthAnchor, multiplier: 1)
         ])
     }
@@ -63,5 +63,17 @@ class PostBottomBarView: UIView {
         buttonComment.setImage(UIImage(systemName: "message"), for: .normal)
         buttonSend.setImage(UIImage(systemName: "paperplane"), for: .normal)
         buttonBookmarks.setImage(UIImage(systemName: "bookmark"), for: .normal)
+        
+        buttonLike.contentVerticalAlignment = .fill
+        buttonLike.contentHorizontalAlignment = .fill
+        
+        buttonComment.contentVerticalAlignment = .fill
+        buttonComment.contentHorizontalAlignment = .fill
+        
+        buttonSend.contentVerticalAlignment = .fill
+        buttonSend.contentHorizontalAlignment = .fill
+        
+        buttonBookmarks.contentVerticalAlignment = .fill
+        buttonBookmarks.contentHorizontalAlignment = .fill
     }
 }

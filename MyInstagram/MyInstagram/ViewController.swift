@@ -14,26 +14,17 @@ enum Section: Hashable, CaseIterable {
 
 class ViewController: UIViewController, UICollectionViewDelegate {
     let navBarView = MainNavBarView()
+    let toolBar = ToolBarView()
     lazy var storyCollectionView = UICollectionView(frame: .zero, collectionViewLayout: getCompositionalLayout())
     
     var collectionDataSource: UICollectionViewDiffableDataSource<Section, StoryCellItem>!
     var titleItems: [StoryCellItem] = []
     var postItems: [StoryCellItem] = []
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         view.backgroundColor = .systemBackground
         fillItems()
-        
-        registerForTraitChanges([UITraitUserInterfaceStyle.self], handler: { (self: Self, previousTraitCollection: UITraitCollection) in
-            if self.traitCollection.userInterfaceStyle == .light {
-                self.lightMode()
-                
-            } else {
-                self.darkMode()
-            }
-        })
-        
         constraints()
         navControllerParameters()
         storyCollectionViewParameters()
@@ -46,8 +37,8 @@ class ViewController: UIViewController, UICollectionViewDelegate {
         let secondCellRegistration = UICollectionView.CellRegistration<PostCollectionViewCell, StoryCellItem> {
             cell, IndexPath, itemIdentifier in
             cell.imageView.image = itemIdentifier.image
-            cell.postCommentsView.likeLabel.text = itemIdentifier.likeText
-            cell.postCommentsView.bodyLabel.text = itemIdentifier.bodyText
+            cell.postCommentsView.likeLabel.attributedText = itemIdentifier.likeText
+            cell.postCommentsView.bodyLabel.attributedText = itemIdentifier.bodyText
             cell.postHeadBarView.authorLabel.text = itemIdentifier.title
         }
         
@@ -71,8 +62,10 @@ class ViewController: UIViewController, UICollectionViewDelegate {
     func constraints(){
         view.addSubview(navBarView)
         view.addSubview(storyCollectionView)
+        view.addSubview(toolBar)
         navBarView.translatesAutoresizingMaskIntoConstraints = false
         storyCollectionView.translatesAutoresizingMaskIntoConstraints = false
+        toolBar.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             navBarView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 5),
             navBarView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 15),
@@ -82,22 +75,13 @@ class ViewController: UIViewController, UICollectionViewDelegate {
             storyCollectionView.topAnchor.constraint(equalTo: navBarView.bottomAnchor),
             storyCollectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             storyCollectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            storyCollectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+            
+            toolBar.topAnchor.constraint(equalTo: storyCollectionView.bottomAnchor),
+            toolBar.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            toolBar.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            toolBar.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+            toolBar.heightAnchor.constraint(equalToConstant: 50)
         ])
-    }
-    
-    func lightMode(){
-        self.navBarView.buttonAddPost.tintColor = .black
-        self.navBarView.buttonLike.tintColor = .black
-        self.navBarView.buttonMessage.tintColor = .black
-        self.navBarView.label.textColor = .black
-    }
-    
-    func darkMode(){
-        self.navBarView.buttonAddPost.tintColor = .white
-        self.navBarView.buttonLike.tintColor = .white
-        self.navBarView.buttonMessage.tintColor = .white
-        self.navBarView.label.textColor = .white
     }
     
     func getCompositionalLayout() -> UICollectionViewCompositionalLayout {
@@ -106,7 +90,7 @@ class ViewController: UIViewController, UICollectionViewDelegate {
             if section == 0 {
                 let itemSize = NSCollectionLayoutSize(widthDimension: .estimated(1), heightDimension: .fractionalHeight(1))
                 let item = NSCollectionLayoutItem(layoutSize: itemSize)
-                let groupSize = NSCollectionLayoutSize(widthDimension: .estimated(1), heightDimension: .fractionalHeight(1/7))
+                let groupSize = NSCollectionLayoutSize(widthDimension: .estimated(1), heightDimension: .absolute(110))
                 let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
                 let layoutSection = NSCollectionLayoutSection(group: group)
                 layoutSection.interGroupSpacing = 5
@@ -136,10 +120,17 @@ class ViewController: UIViewController, UICollectionViewDelegate {
     }
     
     func fillItems(){
+        
         for i in 1...10{
-            titleItems.append(StoryCellItem(title: "avatar\(i)"))
-            postItems.append(StoryCellItem(image: UIImage(resource: .post), title: "Arisha\(i)", likeText: "Likes: \(i)", bodyText: "NAME lsalkjadjald test text"))
+            let likeText = NSMutableAttributedString(string: "Likes: \(i)")
+            let bodyText = NSMutableAttributedString(string: "NAME lsalkjadjald test text")
+            let range = (likeText.string as NSString).range(of: "Likes:")
+            likeText.addAttribute(.font, value: UIFont.systemFont(ofSize: 17, weight: .semibold), range: range)
+            let rangeBody = (bodyText.string as NSString).range(of: "NAME")
+            bodyText.addAttribute(.font, value: UIFont.systemFont(ofSize: 17, weight: .semibold), range: rangeBody)
+            titleItems.append(StoryCellItem(title: "Arisha\(i)"))
+            postItems.append(StoryCellItem(image: UIImage(resource: .post), title: "Arisha\(i)", likeText: likeText, bodyText: bodyText))
         }
-        print(postItems)
     }
+    
 }

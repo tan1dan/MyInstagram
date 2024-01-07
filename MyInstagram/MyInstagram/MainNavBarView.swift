@@ -33,6 +33,14 @@ class MainNavBarView: UIView {
         } else {
             darkMode()
         }
+        registerForTraitChanges([UITraitUserInterfaceStyle.self], handler: { (self: Self, previousTraitCollection: UITraitCollection) in
+            if self.traitCollection.userInterfaceStyle == .light {
+                self.lightMode()
+                
+            } else {
+                self.darkMode()
+            }
+        })
     }
     
     required init?(coder: NSCoder) {

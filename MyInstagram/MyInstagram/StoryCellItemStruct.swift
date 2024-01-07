@@ -10,6 +10,6 @@ import UIKit
 struct StoryCellItem: Hashable {
     var image: UIImage?
     var title: String?
-    var likeText: String?
-    var bodyText: String?
+    var likeText: NSMutableAttributedString?
+    var bodyText: NSMutableAttributedString?
 }
