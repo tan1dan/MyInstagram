@@ -15,8 +15,8 @@ class PostCommentsView: UIView {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        constraints()
         likeLabelParameters()
+        constraints()
         bodyLabelParameters()
         buttonLookCommentParameters()
     }
@@ -37,22 +37,22 @@ class PostCommentsView: UIView {
         
         NSLayoutConstraint.activate([
             likeLabel.topAnchor.constraint(equalTo: topAnchor),
-            likeLabel.leadingAnchor.constraint(equalTo: leadingAnchor),
+            likeLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 5),
             likeLabel.heightAnchor.constraint(equalToConstant: 20),
             
             bodyLabel.topAnchor.constraint(equalTo: likeLabel.bottomAnchor, constant: 5),
-            bodyLabel.leadingAnchor.constraint(equalTo: leadingAnchor),
+            bodyLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 5),
             bodyLabel.heightAnchor.constraint(equalToConstant: 20),
             
             buttonLookComments.topAnchor.constraint(equalTo: bodyLabel.bottomAnchor, constant: 5),
-            buttonLookComments.leadingAnchor.constraint(equalTo: leadingAnchor),
+            buttonLookComments.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 5),
             buttonLookComments.bottomAnchor.constraint(equalTo: bottomAnchor),
             buttonLookComments.heightAnchor.constraint(equalToConstant: 20)
         ])
     }
     
     private func likeLabelParameters(){
-        likeLabel.text = "Likes: 1000"
+        
     }
     
     private func bodyLabelParameters(){
