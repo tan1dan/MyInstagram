@@ -15,7 +15,7 @@ enum Section: Hashable, CaseIterable {
 class ViewController: UIViewController, UICollectionViewDelegate {
     let navBarView = MainNavBarView()
     let toolBar = ToolBarView()
-    lazy var storyCollectionView = UICollectionView(frame: .zero, collectionViewLayout: getCompositionalLayout())
+    lazy var mainCollectionView = UICollectionView(frame: .zero, collectionViewLayout: getCompositionalLayout())
     
     var collectionDataSource: UICollectionViewDiffableDataSource<Section, StoryCellItem>!
     var titleItems: [StoryCellItem] = []
@@ -29,12 +29,12 @@ class ViewController: UIViewController, UICollectionViewDelegate {
         navControllerParameters()
         storyCollectionViewParameters()
         
-        let cellRegistration = UICollectionView.CellRegistration<StoryCollectionViewCell, StoryCellItem> {
+        let storyCellRegistration = UICollectionView.CellRegistration<StoryCollectionViewCell, StoryCellItem> {
             cell, indexPath, itemIdentifier in
             cell.nicknameLabel.text = itemIdentifier.title
         }
         
-        let secondCellRegistration = UICollectionView.CellRegistration<PostCollectionViewCell, StoryCellItem> {
+        let postCellRegistration = UICollectionView.CellRegistration<PostCollectionViewCell, StoryCellItem> {
             cell, IndexPath, itemIdentifier in
             cell.imageView.image = itemIdentifier.image
             cell.postCommentsView.likeLabel.attributedText = itemIdentifier.likeText
@@ -42,29 +42,29 @@ class ViewController: UIViewController, UICollectionViewDelegate {
             cell.postHeadBarView.authorLabel.text = itemIdentifier.title
         }
         
-        collectionDataSource = UICollectionViewDiffableDataSource(collectionView: storyCollectionView) { (collectionView: UICollectionView, indexPath: IndexPath, itemIdentifier: StoryCellItem) -> UICollectionViewCell? in
+        collectionDataSource = UICollectionViewDiffableDataSource(collectionView: mainCollectionView) { (collectionView: UICollectionView, indexPath: IndexPath, itemIdentifier: StoryCellItem) -> UICollectionViewCell? in
             if indexPath.section == 0 {
-                let cell = collectionView.dequeueConfiguredReusableCell(using: cellRegistration, for: indexPath, item: itemIdentifier)
+                let cell = collectionView.dequeueConfiguredReusableCell(using: storyCellRegistration, for: indexPath, item: itemIdentifier)
                 return cell
             } else {
-                let cell = collectionView.dequeueConfiguredReusableCell(using: secondCellRegistration, for: indexPath, item: itemIdentifier)
+                let cell = collectionView.dequeueConfiguredReusableCell(using: postCellRegistration, for: indexPath, item: itemIdentifier)
                 return cell
             }
         }
         
-        var firstSnapshot = NSDiffableDataSourceSnapshot<Section, StoryCellItem>()
-        firstSnapshot.appendSections([.first, .second])
-        firstSnapshot.appendItems(titleItems, toSection: .first)
-        firstSnapshot.appendItems(postItems, toSection: .second)
-        collectionDataSource.apply(firstSnapshot, animatingDifferences: true)
+        var snapshot = NSDiffableDataSourceSnapshot<Section, StoryCellItem>()
+        snapshot.appendSections([.first, .second])
+        snapshot.appendItems(titleItems, toSection: .first)
+        snapshot.appendItems(postItems, toSection: .second)
+        collectionDataSource.apply(snapshot, animatingDifferences: true)
     }
     
     func constraints(){
         view.addSubview(navBarView)
-        view.addSubview(storyCollectionView)
+        view.addSubview(mainCollectionView)
         view.addSubview(toolBar)
         navBarView.translatesAutoresizingMaskIntoConstraints = false
-        storyCollectionView.translatesAutoresizingMaskIntoConstraints = false
+        mainCollectionView.translatesAutoresizingMaskIntoConstraints = false
         toolBar.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             navBarView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 5),
@@ -72,11 +72,11 @@ class ViewController: UIViewController, UICollectionViewDelegate {
             navBarView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -15),
             navBarView.heightAnchor.constraint(equalToConstant: 40),
             
-            storyCollectionView.topAnchor.constraint(equalTo: navBarView.bottomAnchor),
-            storyCollectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            storyCollectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            mainCollectionView.topAnchor.constraint(equalTo: navBarView.bottomAnchor),
+            mainCollectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            mainCollectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             
-            toolBar.topAnchor.constraint(equalTo: storyCollectionView.bottomAnchor),
+            toolBar.topAnchor.constraint(equalTo: mainCollectionView.bottomAnchor),
             toolBar.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             toolBar.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             toolBar.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
@@ -103,16 +103,15 @@ class ViewController: UIViewController, UICollectionViewDelegate {
                 let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
                 let layoutSection = NSCollectionLayoutSection(group: group)
                 layoutSection.interGroupSpacing = 5
-                
                 return layoutSection
             }
         }
     }
     
     func storyCollectionViewParameters(){
-        storyCollectionView.delegate = self
-        storyCollectionView.register(StoryCollectionViewCell.self, forCellWithReuseIdentifier: StoryCollectionViewCell.id)
-        storyCollectionView.register(PostCollectionViewCell.self, forCellWithReuseIdentifier: PostCollectionViewCell.id)
+        mainCollectionView.delegate = self
+        mainCollectionView.register(StoryCollectionViewCell.self, forCellWithReuseIdentifier: StoryCollectionViewCell.id)
+        mainCollectionView.register(PostCollectionViewCell.self, forCellWithReuseIdentifier: PostCollectionViewCell.id)
     }
     
     func navControllerParameters(){
