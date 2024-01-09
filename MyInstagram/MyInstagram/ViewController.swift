@@ -12,14 +12,15 @@ enum Section: Hashable, CaseIterable {
     case second
 }
 
-class ViewController: UIViewController, UICollectionViewDelegate {
+class ViewController: UIViewController, UICollectionViewDelegate, PostBottomBarViewDelegate {
+    
     let navBarView = MainNavBarView()
     let toolBar = ToolBarView()
     lazy var mainCollectionView = UICollectionView(frame: .zero, collectionViewLayout: getCompositionalLayout())
     
-    var collectionDataSource: UICollectionViewDiffableDataSource<Section, StoryCellItem>!
-    var titleItems: [StoryCellItem] = []
-    var postItems: [StoryCellItem] = []
+    var collectionDataSource: UICollectionViewDiffableDataSource<Section, CellItem>!
+    var titleItems: [CellItem] = []
+    var postItems: [CellItem] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -29,20 +30,23 @@ class ViewController: UIViewController, UICollectionViewDelegate {
         navControllerParameters()
         storyCollectionViewParameters()
         
-        let storyCellRegistration = UICollectionView.CellRegistration<StoryCollectionViewCell, StoryCellItem> {
+        let storyCellRegistration = UICollectionView.CellRegistration<StoryCollectionViewCell, CellItem> {
             cell, indexPath, itemIdentifier in
-            cell.nicknameLabel.text = itemIdentifier.title
+            cell.nicknameLabel.text = itemIdentifier.story?.title
         }
         
-        let postCellRegistration = UICollectionView.CellRegistration<PostCollectionViewCell, StoryCellItem> {
+        let postCellRegistration = UICollectionView.CellRegistration<PostCollectionViewCell, CellItem> {
             cell, IndexPath, itemIdentifier in
-            cell.imageView.image = itemIdentifier.image
-            cell.postCommentsView.likeLabel.attributedText = itemIdentifier.likeText
-            cell.postCommentsView.bodyLabel.attributedText = itemIdentifier.bodyText
-            cell.postHeadBarView.authorLabel.text = itemIdentifier.title
+            cell.imageView.image = itemIdentifier.post?.image
+            cell.postCommentsView.likeLabel.attributedText = itemIdentifier.post?.likeText
+            cell.postCommentsView.bodyLabel.attributedText = itemIdentifier.post?.bodyText
+            cell.postHeadBarView.authorLabel.text = itemIdentifier.post?.title
+            
+            cell.postBottomBarView.tag = IndexPath.row
+            cell.postBottomBarView.delegate = self
         }
         
-        collectionDataSource = UICollectionViewDiffableDataSource(collectionView: mainCollectionView) { (collectionView: UICollectionView, indexPath: IndexPath, itemIdentifier: StoryCellItem) -> UICollectionViewCell? in
+        collectionDataSource = UICollectionViewDiffableDataSource(collectionView: mainCollectionView) { (collectionView: UICollectionView, indexPath: IndexPath, itemIdentifier: CellItem) -> UICollectionViewCell? in
             if indexPath.section == 0 {
                 let cell = collectionView.dequeueConfiguredReusableCell(using: storyCellRegistration, for: indexPath, item: itemIdentifier)
                 return cell
@@ -52,7 +56,7 @@ class ViewController: UIViewController, UICollectionViewDelegate {
             }
         }
         
-        var snapshot = NSDiffableDataSourceSnapshot<Section, StoryCellItem>()
+        var snapshot = NSDiffableDataSourceSnapshot<Section, CellItem>()
         snapshot.appendSections([.first, .second])
         snapshot.appendItems(titleItems, toSection: .first)
         snapshot.appendItems(postItems, toSection: .second)
@@ -127,9 +131,48 @@ class ViewController: UIViewController, UICollectionViewDelegate {
             likeText.addAttribute(.font, value: UIFont.systemFont(ofSize: 17, weight: .semibold), range: range)
             let rangeBody = (bodyText.string as NSString).range(of: "NAME")
             bodyText.addAttribute(.font, value: UIFont.systemFont(ofSize: 17, weight: .semibold), range: rangeBody)
-            titleItems.append(StoryCellItem(title: "Arisha\(i)"))
-            postItems.append(StoryCellItem(image: UIImage(resource: .post), title: "Arisha\(i)", likeText: likeText, bodyText: bodyText))
+            titleItems.append(CellItem(story: StoryItem(title: "Arisha\(i)")))
+            postItems.append(CellItem(post: PostItem(image: UIImage(resource: .post), title: "Arisha\(i)", likeText: likeText, bodyText: bodyText, isLiked: false, isBookmark: false)))
         }
+    }
+    
+    func buttonLikePres(_ sender: PostBottomBarView) {
+        var snapshot = collectionDataSource.snapshot()
+        let indexPathRow = sender.tag
+        let indexPath = IndexPath(row: indexPathRow, section: 1)
+        
+        guard var item = collectionDataSource.itemIdentifier(for: indexPath) else { return }
+        let index = snapshot.indexOfItem(item)
+        print(index)
+        if item.post?.isLiked == false {
+            UIView.animate(withDuration: 0.2, animations: {
+                sender.buttonLike.setImage(UIImage(systemName: "heart.fill")?.withTintColor(.red, renderingMode: .alwaysOriginal), for: .normal)
+                let scaleTransform = CGAffineTransform(scaleX: 1.2, y: 1.2)
+                sender.buttonLike.transform = scaleTransform
+            }){ _ in
+                UIView.animate(withDuration: 0.2) {
+                    sender.buttonLike.transform = CGAffineTransform.identity
+                }
+            }
+        } else {
+            UIView.animate(withDuration: 0.2) {
+                sender.buttonLike.setImage(UIImage(systemName: "heart"), for: .normal)
+            }
+        }
+        
+        if var postItem = item.post {
+            postItem.isLiked.toggle()
+            print(postItem.isLiked)
+            item.post = postItem
+        }
+        
+        snapshot.reloadItems([snapshot.itemIdentifiers[index!]])
+        collectionDataSource.apply(snapshot, animatingDifferences: true)
+        
+    }
+    
+    func buttonBookmark(_ sender: PostBottomBarView) {
+        
     }
     
 }
