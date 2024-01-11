@@ -7,13 +7,19 @@
 
 import UIKit
 
+protocol ToolBarViewDelegate: AnyObject {
+    func buttonAddPostPress(_ sender: ToolBarView)
+}
+
 class ToolBarView: UIView {
+    
     let buttonHome = UIButton()
     let buttonSearch = UIButton()
     let buttonAddPost = UIButton()
     let buttonMedia = UIButton()
     let buttonAccount = UIButton()
     let stackView = UIStackView()
+    weak var delegate: ToolBarViewDelegate?
     override init(frame: CGRect) {
         super.init(frame: frame)
         addSubviews()
@@ -107,6 +113,7 @@ class ToolBarView: UIView {
         buttonAddPost.setImage(UIImage(systemName: "plus.viewfinder"), for: .normal)
         buttonAddPost.contentVerticalAlignment = .fill
         buttonAddPost.contentHorizontalAlignment = .fill
+        buttonAddPost.addTarget(self, action: #selector(buttonAddPostTarget), for: .touchUpInside)
         
         buttonMedia.setImage(UIImage(systemName: "play.square"), for: .normal)
         buttonMedia.contentVerticalAlignment = .fill
@@ -134,5 +141,9 @@ class ToolBarView: UIView {
         buttonSearch.tintColor = .white
         buttonAddPost.tintColor = .white
         buttonMedia.tintColor = .white
+    }
+    
+    @objc func buttonAddPostTarget(){
+        delegate?.buttonAddPostPress(self)
     }
 }

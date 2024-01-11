@@ -12,7 +12,7 @@ enum Section: Hashable, CaseIterable {
     case second
 }
 
-class ViewController: UIViewController, UICollectionViewDelegate, PostBottomBarViewDelegate {
+class ViewController: UIViewController, UICollectionViewDelegate, PostBottomBarViewDelegate, ToolBarViewDelegate, MainBarViewDelegate {
     
     let navBarView = MainNavBarView()
     let toolBar = ToolBarView()
@@ -29,7 +29,8 @@ class ViewController: UIViewController, UICollectionViewDelegate, PostBottomBarV
         constraints()
         navControllerParameters()
         storyCollectionViewParameters()
-        
+        delegateParameters()
+        NotificationCenter.default.addObserver(self, selector: #selector(notificationReceived), name: NotificationStorage.name, object: nil)
         let storyCellRegistration = UICollectionView.CellRegistration<StoryCollectionViewCell, CellItem> {
             cell, indexPath, itemIdentifier in
             cell.nicknameLabel.text = itemIdentifier.story?.title
@@ -63,6 +64,7 @@ class ViewController: UIViewController, UICollectionViewDelegate, PostBottomBarV
         collectionDataSource.apply(snapshot, animatingDifferences: true)
     }
     
+    
     func constraints(){
         view.addSubview(navBarView)
         view.addSubview(mainCollectionView)
@@ -86,6 +88,12 @@ class ViewController: UIViewController, UICollectionViewDelegate, PostBottomBarV
             toolBar.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
             toolBar.heightAnchor.constraint(equalToConstant: 50)
         ])
+    }
+    
+    private func delegateParameters(){
+        toolBar.delegate = self
+        mainCollectionView.delegate = self
+        navBarView.delegate = self
     }
     
     func getCompositionalLayout() -> UICollectionViewCompositionalLayout {
@@ -113,13 +121,13 @@ class ViewController: UIViewController, UICollectionViewDelegate, PostBottomBarV
     }
     
     func storyCollectionViewParameters(){
-        mainCollectionView.delegate = self
         mainCollectionView.register(StoryCollectionViewCell.self, forCellWithReuseIdentifier: StoryCollectionViewCell.id)
         mainCollectionView.register(PostCollectionViewCell.self, forCellWithReuseIdentifier: PostCollectionViewCell.id)
+        mainCollectionView.showsVerticalScrollIndicator = false
     }
     
     func navControllerParameters(){
-        self.navigationController?.setNavigationBarHidden(true, animated: false)
+        navigationController?.setNavigationBarHidden(true, animated: false)
     }
     
     func fillItems(){
@@ -143,7 +151,6 @@ class ViewController: UIViewController, UICollectionViewDelegate, PostBottomBarV
         
         guard var item = collectionDataSource.itemIdentifier(for: indexPath) else { return }
         let index = snapshot.indexOfItem(item)
-        print(index)
         if item.post?.isLiked == false {
             UIView.animate(withDuration: 0.2, animations: {
                 sender.buttonLike.setImage(UIImage(systemName: "heart.fill")?.withTintColor(.red, renderingMode: .alwaysOriginal), for: .normal)
@@ -175,4 +182,30 @@ class ViewController: UIViewController, UICollectionViewDelegate, PostBottomBarV
         
     }
     
+    func buttonAddPostPress(_ sender: ToolBarView) {
+        let addPostViewController = AddPostViewController()
+        navigationController?.pushViewController(addPostViewController, animated: true)
+    }
+    
+    func buttonAddPostPressed(_ sender: MainNavBarView) {
+        let addPostViewController = AddPostViewController()
+        navigationController?.pushViewController(addPostViewController, animated: true)
+    }
+    
+    func buttonLikePressed(_ sender: MainNavBarView) {
+        
+    }
+    
+    func buttonMessagePressed(_ sender: MainNavBarView) {
+        
+    }
+    
+    @objc func notificationReceived(_ notification: NSNotification){
+        let post = notification.userInfo?["NewPost"] as? PostItem
+        postItems.append(CellItem(post: post))
+        var snapshot = collectionDataSource.snapshot()
+        snapshot.appendItems([CellItem(post: post)], toSection: .second)
+        collectionDataSource.apply(snapshot, animatingDifferences: false)
+        print(postItems)
+    }
 }
