@@ -7,13 +7,20 @@
 
 import UIKit
 
+protocol PostBottomBarViewDelegate: AnyObject {
+    func buttonLikePres(_ sender: PostBottomBarView)
+    func buttonBookmark(_ sender: PostBottomBarView)
+}
+
+
 class PostBottomBarView: UIView {
     
     let buttonLike = UIButton(type: .system)
     let buttonComment = UIButton(type: .system)
     let buttonSend = UIButton(type: .system)
     let buttonBookmarks = UIButton(type: .system)
-    
+    var isBookmark = false
+    weak var delegate: PostBottomBarViewDelegate?
     override init(frame: CGRect) {
         super.init(frame: frame)
         constraints()
@@ -23,7 +30,6 @@ class PostBottomBarView: UIView {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
     private func constraints(){
         
         buttonLike.translatesAutoresizingMaskIntoConstraints = false
@@ -66,6 +72,7 @@ class PostBottomBarView: UIView {
         
         buttonLike.contentVerticalAlignment = .fill
         buttonLike.contentHorizontalAlignment = .fill
+        buttonLike.addTarget(self, action: #selector(buttonLikeTarget), for: .touchUpInside)
         
         buttonComment.contentVerticalAlignment = .fill
         buttonComment.contentHorizontalAlignment = .fill
@@ -75,5 +82,31 @@ class PostBottomBarView: UIView {
         
         buttonBookmarks.contentVerticalAlignment = .fill
         buttonBookmarks.contentHorizontalAlignment = .fill
+        buttonBookmarks.addTarget(self, action: #selector(buttonBookmarkTarget), for: .touchUpInside)
     }
+    
+    @objc func buttonLikeTarget(){
+        delegate?.buttonLikePres(self)
+    }
+    
+    @objc func buttonBookmarkTarget(){
+        if !isBookmark {
+            UIView.animate(withDuration: 0.2, animations: {
+                self.buttonBookmarks.setImage(UIImage(systemName: "bookmark.fill"), for: .normal)
+                let scaleTransform = CGAffineTransform(scaleX: 1.1, y: 1.1)
+                self.buttonBookmarks.transform = scaleTransform
+            }){ _ in
+                UIView.animate(withDuration: 0.2) {
+                    self.buttonBookmarks.transform = CGAffineTransform.identity
+                }
+            }
+        } else {
+            UIView.animate(withDuration: 0.2) {
+                self.buttonBookmarks.setImage(UIImage(systemName: "bookmark"), for: .normal)
+            }
+        }
+        delegate?.buttonBookmark(self)
+        isBookmark.toggle()
+    }
+    
 }

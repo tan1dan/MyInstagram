@@ -23,6 +23,7 @@
 		F721F8D92B41D26200652917 /* PostBottomBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F721F8D82B41D26200652917 /* PostBottomBarView.swift */; };
 		F721F8FB2B4442CE00652917 /* PostCommentsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F721F8FA2B4442CE00652917 /* PostCommentsView.swift */; };
 		F721F8FD2B4AC85F00652917 /* ToolBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F721F8FC2B4AC85F00652917 /* ToolBarView.swift */; };
+		F7257F992B4ED8560029B8A6 /* AddPostViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7257F982B4ED8560029B8A6 /* AddPostViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -44,6 +45,7 @@
 		F721F8D82B41D26200652917 /* PostBottomBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostBottomBarView.swift; sourceTree = "<group>"; };
 		F721F8FA2B4442CE00652917 /* PostCommentsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostCommentsView.swift; sourceTree = "<group>"; };
 		F721F8FC2B4AC85F00652917 /* ToolBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolBarView.swift; sourceTree = "<group>"; };
+		F7257F982B4ED8560029B8A6 /* AddPostViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddPostViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -81,6 +83,7 @@
 				F721F8D22B3C1BB600652917 /* StoryCellItemStruct.swift */,
 				F721F8902B2F574300652917 /* ViewController.swift */,
 				F721F8A02B2F5A1500652917 /* SplashScreenViewController.swift */,
+				F7257F982B4ED8560029B8A6 /* AddPostViewController.swift */,
 				F721F8C42B3A3E9C00652917 /* MainNavBarView.swift */,
 				F721F8D02B3C07D100652917 /* StoryCollectionViewCell.swift */,
 				F721F8D42B41A1B600652917 /* PostCollectionViewCell.swift */,
@@ -181,6 +184,7 @@
 				F721F8FB2B4442CE00652917 /* PostCommentsView.swift in Sources */,
 				F721F8D92B41D26200652917 /* PostBottomBarView.swift in Sources */,
 				F721F8C52B3A3E9C00652917 /* MainNavBarView.swift in Sources */,
+				F7257F992B4ED8560029B8A6 /* AddPostViewController.swift in Sources */,
 				F721F8D72B41A22200652917 /* PostHeadBarView.swift in Sources */,
 				F721F8D32B3C1BB600652917 /* StoryCellItemStruct.swift in Sources */,
 				F721F8FD2B4AC85F00652917 /* ToolBarView.swift in Sources */,

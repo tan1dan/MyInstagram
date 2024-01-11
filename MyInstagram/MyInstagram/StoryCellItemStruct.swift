@@ -7,9 +7,21 @@
 
 import UIKit
 
-struct StoryCellItem: Hashable {
+struct CellItem: Hashable {
+    var story: StoryItem?
+    var post: PostItem?
+}
+
+struct PostItem: Hashable {
     var image: UIImage?
     var title: String?
     var likeText: NSMutableAttributedString?
     var bodyText: NSMutableAttributedString?
+    var isLiked: Bool
+    var isBookmark: Bool
+}
+
+struct StoryItem: Hashable {
+    var image: UIImage?
+    var title: String?
 }
