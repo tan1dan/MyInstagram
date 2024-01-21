@@ -6,22 +6,32 @@
 //
 
 import UIKit
+import Firebase
+import FirebaseCore
 
 class SplashScreenViewController: UIViewController {
     
     let logoView = UIImageView()
+    let nextVC = ViewController()
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        var nextVC: UIViewController = UIViewController()
         view.backgroundColor = .systemBackground
         logoViewParameters()
-        
-        let nextVC = ViewController()
+        Auth.auth().addStateDidChangeListener { auth, user in
+            if user == nil {
+                nextVC = AuthViewController()
+            }
+            else{
+                nextVC = ViewController()
+            }
+        }
         DispatchQueue.main.asyncAfter(deadline: .now() + 2){
             self.navigationController?.pushViewController(nextVC, animated: false)
         }
-    }
-    
+        }
+   
     private func logoViewParameters(){
         logoView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(logoView)

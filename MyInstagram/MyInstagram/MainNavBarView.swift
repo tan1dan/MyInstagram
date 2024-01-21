@@ -23,7 +23,6 @@ class MainNavBarView: UIView {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        
         constraints()
         buttonParameters()
         labelParameters()

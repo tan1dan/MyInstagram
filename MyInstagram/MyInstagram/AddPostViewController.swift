@@ -7,6 +7,8 @@
 
 import UIKit
 import PhotosUI
+import FirebaseAuth
+import FirebaseFirestore
 
 enum NotificationStorage {
     static let name = NSNotification.Name.init("AddPostViewController")
@@ -52,7 +54,12 @@ class AddPostViewController: UIViewController, PHPickerViewControllerDelegate, U
         if imageView.image != nil && textView.textColor != .lightGray {
             let post = PostItem(image: imageView.image, title: "Name of Account", likeText:NSMutableAttributedString(string: "Likes: 0"), bodyText: NSMutableAttributedString(string: "NAME " + textView.text), isLiked: false, isBookmark: false)
             NotificationCenter.default.post(name: NotificationStorage.name, object: self, userInfo: ["NewPost" : post])
-            navigationController?.popViewController(animated: true)
+            
+            setData()
+            
+            
+            
+            navigationController?.pushViewController(ViewController(), animated: true)
             navigationController?.setNavigationBarHidden(true, animated: false)
         } else if imageView.image == nil && textView.textColor == .lightGray {
             showAlert("Error", description: "Please choose a text and image to add Post", completion: nil)
@@ -181,6 +188,30 @@ class AddPostViewController: UIViewController, PHPickerViewControllerDelegate, U
             completion?(true)
         }))
         self.present(controller, animated: true)
+    }
+    
+    private func setData(){
+        var name: String?
+        if let id = Auth.auth().currentUser?.uid {
+            Firestore.firestore().document("\(id)/accountInformation").getDocument { snapshot, error in
+                if error == nil {
+                    if let snapshot = snapshot?.data() {
+                        name = snapshot["name"] as? String
+                        
+                    }
+                }
+            }
+        }
+    
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2, execute: DispatchWorkItem(block: {
+            if let id = Auth.auth().currentUser?.uid {
+                guard let name = name else {return}
+                guard let text = self.textView.text else {return}
+                let database = Firestore.firestore().collection(id).document("postItems").collection("postItem").document(UUID().uuidString)
+                database.setData(["title" : name, "bodyText": "\(name): \(text)"])
+            }
+        }))
+        
     }
 }
 extension PHPickerViewController {

@@ -8,14 +8,16 @@
 import UIKit
 
 protocol AccountNavBarViewDelegate: AnyObject {
-    func buttonAddPostPressed(_ sender: AccountNavViewBar)
-    func buttonParameterPressed(_ sender: AccountNavViewBar)
+    func buttonAddPostPressed(_ sender: AccountNavBarView)
+    func buttonParameterPressed(_ sender: AccountNavBarView)
+    func buttonLogOutPressed(_ sender: AccountNavBarView)
 }
 
-class AccountNavViewBar: UIView {
+class AccountNavBarView: UIView {
     let label = UILabel()
     let buttonAddPost = UIButton(type: .system)
     let buttonParameter = UIButton(type: .system)
+    let buttonLogOut = UIButton(type: .system)
     weak var delegate: AccountNavBarViewDelegate?
     
     override init(frame: CGRect) {
@@ -48,10 +50,12 @@ class AccountNavViewBar: UIView {
         addSubview(label)
         addSubview(buttonParameter)
         addSubview(buttonAddPost)
+        addSubview(buttonLogOut)
         
         label.translatesAutoresizingMaskIntoConstraints = false
         buttonParameter.translatesAutoresizingMaskIntoConstraints = false
         buttonAddPost.translatesAutoresizingMaskIntoConstraints = false
+        buttonLogOut.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
             //Label
@@ -70,7 +74,11 @@ class AccountNavViewBar: UIView {
             buttonAddPost.topAnchor.constraint(equalTo: topAnchor, constant: 7),
             buttonAddPost.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -7),
             buttonAddPost.trailingAnchor.constraint(equalTo: buttonParameter.leadingAnchor, constant: -20),
-            buttonAddPost.heightAnchor.constraint(equalTo: buttonAddPost.widthAnchor, multiplier: 1)
+            buttonAddPost.heightAnchor.constraint(equalTo: buttonAddPost.widthAnchor, multiplier: 1),
+            
+            buttonLogOut.trailingAnchor.constraint(equalTo: buttonAddPost.leadingAnchor, constant: -10),
+            buttonLogOut.topAnchor.constraint(equalTo: topAnchor),
+            buttonLogOut.bottomAnchor.constraint(equalTo: bottomAnchor),
         ])
     }
     
@@ -90,6 +98,8 @@ class AccountNavViewBar: UIView {
         buttonAddPost.contentMode = .scaleAspectFill
         buttonAddPost.addTarget(self, action: #selector(buttonAddPostTapped), for: .touchUpInside)
         
+        buttonLogOut.setTitle("Logout", for: .normal)
+        buttonLogOut.addTarget(self, action: #selector(buttonLogOutTapped), for: .touchUpInside)
     }
     
     func labelParameters(){
@@ -109,7 +119,9 @@ class AccountNavViewBar: UIView {
     @objc func buttonParameterTapped(){
         delegate?.buttonParameterPressed(self)
     }
-
+    @objc func buttonLogOutTapped(){
+        delegate?.buttonLogOutPressed(self)
+    }
     
     func lightMode(){
         buttonAddPost.tintColor = .black

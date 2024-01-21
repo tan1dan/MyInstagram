@@ -9,6 +9,8 @@ import UIKit
 
 protocol ToolBarViewDelegate: AnyObject {
     func buttonAddPostPress(_ sender: ToolBarView)
+    func buttonAccountPressed(_ sender: ToolBarView)
+    func buttonHomePressed(_ sender: ToolBarView)
 }
 
 class ToolBarView: UIView {
@@ -105,6 +107,7 @@ class ToolBarView: UIView {
         buttonHome.setImage(UIImage(systemName: "house"), for: .normal)
         buttonHome.contentVerticalAlignment = .fill
         buttonHome.contentHorizontalAlignment = .fill
+        buttonHome.addTarget(self, action: #selector(buttonHomeTarget), for: .touchUpInside)
         
         buttonSearch.setImage(UIImage(systemName: "magnifyingglass"), for: .normal)
         buttonSearch.contentVerticalAlignment = .fill
@@ -120,6 +123,7 @@ class ToolBarView: UIView {
         buttonMedia.contentHorizontalAlignment = .fill
         
         buttonAccount.setImage(UIImage(resource: .avatar1), for: .normal)
+        buttonAccount.addTarget(self, action: #selector(buttonAccountTarget), for: .touchUpInside)
     }
     
     private func addTopBorder(color: UIColor, thickness: CGFloat) {
@@ -145,5 +149,11 @@ class ToolBarView: UIView {
     
     @objc func buttonAddPostTarget(){
         delegate?.buttonAddPostPress(self)
+    }
+    @objc func buttonAccountTarget(){
+        delegate?.buttonAccountPressed(self)
+    }
+    @objc func buttonHomeTarget(){
+        delegate?.buttonHomePressed(self)
     }
 }

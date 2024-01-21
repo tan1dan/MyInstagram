@@ -6,13 +6,20 @@
 //
 
 import UIKit
+import FirebaseAuth
+import FirebaseFirestore
+
+
+protocol SendItemsDelegate: AnyObject {
+    func sendItems(items: [CellItem])
+}
 
 enum Section: Hashable, CaseIterable {
     case first
     case second
 }
 
-class ViewController: UIViewController, UICollectionViewDelegate, PostBottomBarViewDelegate, ToolBarViewDelegate, MainBarViewDelegate {
+class ViewController: UIViewController, UICollectionViewDelegate, PostBottomBarViewDelegate, ToolBarViewDelegate, MainBarViewDelegate{
     
     let navBarView = MainNavBarView()
     let toolBar = ToolBarView()
@@ -21,16 +28,17 @@ class ViewController: UIViewController, UICollectionViewDelegate, PostBottomBarV
     var collectionDataSource: UICollectionViewDiffableDataSource<Section, CellItem>!
     var titleItems: [CellItem] = []
     var postItems: [CellItem] = []
-    
+    weak var delegate: SendItemsDelegate?
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
-        fillItems()
         constraints()
         navControllerParameters()
         storyCollectionViewParameters()
         delegateParameters()
+        fillItems()
         NotificationCenter.default.addObserver(self, selector: #selector(notificationReceived), name: NotificationStorage.name, object: nil)
+        
         let storyCellRegistration = UICollectionView.CellRegistration<StoryCollectionViewCell, CellItem> {
             cell, indexPath, itemIdentifier in
             cell.nicknameLabel.text = itemIdentifier.story?.title
@@ -112,7 +120,7 @@ class ViewController: UIViewController, UICollectionViewDelegate, PostBottomBarV
                 let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .fractionalHeight(1))
                 let item = NSCollectionLayoutItem(layoutSize: itemSize)
                 let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .fractionalHeight(1))
-                let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
+                let group = NSCollectionLayoutGroup.vertical(layoutSize: groupSize, subitems: [item])
                 let layoutSection = NSCollectionLayoutSection(group: group)
                 layoutSection.interGroupSpacing = 5
                 return layoutSection
@@ -131,16 +139,28 @@ class ViewController: UIViewController, UICollectionViewDelegate, PostBottomBarV
     }
     
     func fillItems(){
+        var count = 0
+        if let id = Auth.auth().currentUser?.uid {
+            Firestore.firestore().collection(id).document("postItems").collection("postItem").document(UUID().uuidString).getDocument { snapshot, error in
+                if error == nil {
+                    if let snapshot = snapshot?.data() {
+                        count = snapshot.count
+                        
+                    }
+                }
+            }
+        }
         
-        for i in 1...10{
+        for i in 0...count{
             let likeText = NSMutableAttributedString(string: "Likes: \(i)")
             let bodyText = NSMutableAttributedString(string: "NAME lsalkjadjald test text")
             let range = (likeText.string as NSString).range(of: "Likes:")
             likeText.addAttribute(.font, value: UIFont.systemFont(ofSize: 17, weight: .semibold), range: range)
             let rangeBody = (bodyText.string as NSString).range(of: "NAME")
             bodyText.addAttribute(.font, value: UIFont.systemFont(ofSize: 17, weight: .semibold), range: rangeBody)
-            titleItems.append(CellItem(story: StoryItem(title: "Arisha\(i)")))
-            postItems.append(CellItem(post: PostItem(image: UIImage(resource: .post), title: "Arisha\(i)", likeText: likeText, bodyText: bodyText, isLiked: false, isBookmark: false)))
+            
+            titleItems.append(CellItem(story: StoryItem(title: title)))
+            postItems.append(CellItem(post: PostItem(image: UIImage(resource: .post), title: title, likeText: likeText, bodyText: bodyText, isLiked: false, isBookmark: false)))
         }
     }
     
@@ -200,6 +220,24 @@ class ViewController: UIViewController, UICollectionViewDelegate, PostBottomBarV
         
     }
     
+    func buttonAccountPressed(_ sender: ToolBarView) {
+        let accountVC = AccountViewController()
+        delegate = accountVC
+        var accountItems: [CellItem] = []
+        var count = 0
+        for item in postItems{
+            count += 1
+            accountItems.append(CellItem(account: AccountItem(id: "\(count)", image: item.post?.image ?? UIImage())))
+        }
+        print(accountItems)
+        delegate?.sendItems(items: accountItems)
+        navigationController?.pushViewController(accountVC, animated: false)
+    }
+    
+    func buttonHomePressed(_ sender: ToolBarView) {
+        
+    }
+    
     @objc func notificationReceived(_ notification: NSNotification){
         let post = notification.userInfo?["NewPost"] as? PostItem
         postItems.append(CellItem(post: post))
@@ -208,4 +246,5 @@ class ViewController: UIViewController, UICollectionViewDelegate, PostBottomBarV
         collectionDataSource.apply(snapshot, animatingDifferences: false)
         print(postItems)
     }
+    
 }

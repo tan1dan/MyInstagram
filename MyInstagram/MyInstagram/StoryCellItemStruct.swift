@@ -10,6 +10,7 @@ import UIKit
 struct CellItem: Hashable {
     var story: StoryItem?
     var post: PostItem?
+    var account: AccountItem?
 }
 
 struct PostItem: Hashable {
@@ -24,4 +25,9 @@ struct PostItem: Hashable {
 struct StoryItem: Hashable {
     var image: UIImage?
     var title: String?
+}
+
+struct AccountItem: Hashable {
+    var id: String
+    var image: UIImage
 }
