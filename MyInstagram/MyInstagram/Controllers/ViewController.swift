@@ -139,7 +139,7 @@ class ViewController: UIViewController, UICollectionViewDelegate, PostBottomBarV
     }
     
     func fillItems(){
-        var count = 0
+        var count = 100
         if let id = Auth.auth().currentUser?.uid {
             Firestore.firestore().collection(id).document("postItems").collection("postItem").document(UUID().uuidString).getDocument { snapshot, error in
                 if error == nil {
@@ -159,8 +159,8 @@ class ViewController: UIViewController, UICollectionViewDelegate, PostBottomBarV
             let rangeBody = (bodyText.string as NSString).range(of: "NAME")
             bodyText.addAttribute(.font, value: UIFont.systemFont(ofSize: 17, weight: .semibold), range: rangeBody)
             
-            titleItems.append(CellItem(story: StoryItem(title: title)))
-            postItems.append(CellItem(post: PostItem(image: UIImage(resource: .post), title: title, likeText: likeText, bodyText: bodyText, isLiked: false, isBookmark: false)))
+            titleItems.append(CellItem(story: StoryItem(image: UIImage(resource: .avatar1) ,title: "Arisha\(i)")))
+            postItems.append(CellItem(post: PostItem(image: UIImage(resource: .post), title: "Arisha\(i)", likeText: likeText, bodyText: bodyText, isLiked: false, isBookmark: false)))
         }
     }
     

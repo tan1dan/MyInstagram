@@ -116,26 +116,11 @@
 			children = (
 				F721F88C2B2F574300652917 /* AppDelegate.swift */,
 				F721F88E2B2F574300652917 /* SceneDelegate.swift */,
-				F721F8D22B3C1BB600652917 /* StoryCellItemStruct.swift */,
-				F721F8902B2F574300652917 /* ViewController.swift */,
-				F721F8A02B2F5A1500652917 /* SplashScreenViewController.swift */,
-				F7257FA22B55BCF40029B8A6 /* AuthViewController.swift */,
-				F7257F9A2B509B830029B8A6 /* AccountViewController.swift */,
-				F7257F982B4ED8560029B8A6 /* AddPostViewController.swift */,
-				F721F8C42B3A3E9C00652917 /* MainNavBarView.swift */,
-				F7257F9C2B509C2F0029B8A6 /* AccountNavBarView.swift */,
-				F7257F9E2B5157C20029B8A6 /* MainAccountView.swift */,
-				F721F8D02B3C07D100652917 /* StoryCollectionViewCell.swift */,
-				F721F8D42B41A1B600652917 /* PostCollectionViewCell.swift */,
-				F7257FA02B5308DF0029B8A6 /* AccountCollectionViewCell.swift */,
-				F721F8D62B41A22200652917 /* PostHeadBarView.swift */,
-				F721F8D82B41D26200652917 /* PostBottomBarView.swift */,
-				F721F8FA2B4442CE00652917 /* PostCommentsView.swift */,
-				F721F8FC2B4AC85F00652917 /* ToolBarView.swift */,
+				F74D19222B5FFC1300CAE17C /* Models */,
+				F74D19212B5FFC0C00CAE17C /* Views */,
+				F74D19202B5FFC0200CAE17C /* Controllers */,
 				F721F8C92B3A4B0300652917 /* Fonts */,
 				F721F8952B2F574600652917 /* Assets.xcassets */,
-				F721F8922B2F574300652917 /* Main.storyboard */,
-				F721F8972B2F574600652917 /* LaunchScreen.storyboard */,
 				F721F89A2B2F574600652917 /* Info.plist */,
 				F7257FA42B55C0520029B8A6 /* GoogleService-Info.plist */,
 			);
@@ -148,6 +133,53 @@
 				F721F8CE2B3A5FEA00652917 /* Lobster-Regular.ttf */,
 			);
 			path = Fonts;
+			sourceTree = "<group>";
+		};
+		F74D19202B5FFC0200CAE17C /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				F7257F982B4ED8560029B8A6 /* AddPostViewController.swift */,
+				F7257F9A2B509B830029B8A6 /* AccountViewController.swift */,
+				F7257FA22B55BCF40029B8A6 /* AuthViewController.swift */,
+				F721F8902B2F574300652917 /* ViewController.swift */,
+				F721F8A02B2F5A1500652917 /* SplashScreenViewController.swift */,
+			);
+			path = Controllers;
+			sourceTree = "<group>";
+		};
+		F74D19212B5FFC0C00CAE17C /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				F74D19242B5FFCAC00CAE17C /* Storyboards */,
+				F721F8C42B3A3E9C00652917 /* MainNavBarView.swift */,
+				F7257F9C2B509C2F0029B8A6 /* AccountNavBarView.swift */,
+				F7257F9E2B5157C20029B8A6 /* MainAccountView.swift */,
+				F721F8D02B3C07D100652917 /* StoryCollectionViewCell.swift */,
+				F721F8D42B41A1B600652917 /* PostCollectionViewCell.swift */,
+				F7257FA02B5308DF0029B8A6 /* AccountCollectionViewCell.swift */,
+				F721F8D62B41A22200652917 /* PostHeadBarView.swift */,
+				F721F8D82B41D26200652917 /* PostBottomBarView.swift */,
+				F721F8FA2B4442CE00652917 /* PostCommentsView.swift */,
+				F721F8FC2B4AC85F00652917 /* ToolBarView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		F74D19222B5FFC1300CAE17C /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				F721F8D22B3C1BB600652917 /* StoryCellItemStruct.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		F74D19242B5FFCAC00CAE17C /* Storyboards */ = {
+			isa = PBXGroup;
+			children = (
+				F721F8922B2F574300652917 /* Main.storyboard */,
+				F721F8972B2F574600652917 /* LaunchScreen.storyboard */,
+			);
+			path = Storyboards;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
