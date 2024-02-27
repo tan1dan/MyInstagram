@@ -19,10 +19,10 @@ enum Section: Hashable, CaseIterable {
     case second
 }
 
-class ViewController: UIViewController, UICollectionViewDelegate, PostBottomBarViewDelegate, ToolBarViewDelegate, MainBarViewDelegate{
+class ViewController: UIViewController, UICollectionViewDelegate, PostBottomBarViewDelegate, /*ToolBarViewDelegate,*/ MainBarViewDelegate{
     
     let navBarView = MainNavBarView()
-    let toolBar = ToolBarView()
+//    let toolBar = ToolBarView()
     lazy var mainCollectionView = UICollectionView(frame: .zero, collectionViewLayout: getCompositionalLayout())
     
     var collectionDataSource: UICollectionViewDiffableDataSource<Section, CellItem>!
@@ -36,7 +36,6 @@ class ViewController: UIViewController, UICollectionViewDelegate, PostBottomBarV
         navControllerParameters()
         storyCollectionViewParameters()
         delegateParameters()
-        fillItems()
         NotificationCenter.default.addObserver(self, selector: #selector(notificationReceived), name: NotificationStorage.name, object: nil)
         
         let storyCellRegistration = UICollectionView.CellRegistration<StoryCollectionViewCell, CellItem> {
@@ -68,18 +67,24 @@ class ViewController: UIViewController, UICollectionViewDelegate, PostBottomBarV
         var snapshot = NSDiffableDataSourceSnapshot<Section, CellItem>()
         snapshot.appendSections([.first, .second])
         snapshot.appendItems(titleItems, toSection: .first)
+        
         snapshot.appendItems(postItems, toSection: .second)
         collectionDataSource.apply(snapshot, animatingDifferences: true)
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        downlaodImage()
     }
     
     
     func constraints(){
         view.addSubview(navBarView)
         view.addSubview(mainCollectionView)
-        view.addSubview(toolBar)
+//        view.addSubview(toolBar)
         navBarView.translatesAutoresizingMaskIntoConstraints = false
         mainCollectionView.translatesAutoresizingMaskIntoConstraints = false
-        toolBar.translatesAutoresizingMaskIntoConstraints = false
+//        toolBar.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             navBarView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 5),
             navBarView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 15),
@@ -89,17 +94,18 @@ class ViewController: UIViewController, UICollectionViewDelegate, PostBottomBarV
             mainCollectionView.topAnchor.constraint(equalTo: navBarView.bottomAnchor),
             mainCollectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             mainCollectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            mainCollectionView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
             
-            toolBar.topAnchor.constraint(equalTo: mainCollectionView.bottomAnchor),
-            toolBar.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            toolBar.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            toolBar.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
-            toolBar.heightAnchor.constraint(equalToConstant: 50)
+//            toolBar.topAnchor.constraint(equalTo: mainCollectionView.bottomAnchor),
+//            toolBar.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+//            toolBar.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+//            toolBar.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+//            toolBar.heightAnchor.constraint(equalToConstant: 50)
         ])
     }
     
     private func delegateParameters(){
-        toolBar.delegate = self
+//        toolBar.delegate = self
         mainCollectionView.delegate = self
         navBarView.delegate = self
     }
@@ -138,31 +144,6 @@ class ViewController: UIViewController, UICollectionViewDelegate, PostBottomBarV
         navigationController?.setNavigationBarHidden(true, animated: false)
     }
     
-    func fillItems(){
-        var count = 100
-        if let id = Auth.auth().currentUser?.uid {
-            Firestore.firestore().collection(id).document("postItems").collection("postItem").document(UUID().uuidString).getDocument { snapshot, error in
-                if error == nil {
-                    if let snapshot = snapshot?.data() {
-                        count = snapshot.count
-                        
-                    }
-                }
-            }
-        }
-        
-        for i in 0...count{
-            let likeText = NSMutableAttributedString(string: "Likes: \(i)")
-            let bodyText = NSMutableAttributedString(string: "NAME lsalkjadjald test text")
-            let range = (likeText.string as NSString).range(of: "Likes:")
-            likeText.addAttribute(.font, value: UIFont.systemFont(ofSize: 17, weight: .semibold), range: range)
-            let rangeBody = (bodyText.string as NSString).range(of: "NAME")
-            bodyText.addAttribute(.font, value: UIFont.systemFont(ofSize: 17, weight: .semibold), range: rangeBody)
-            
-            titleItems.append(CellItem(story: StoryItem(image: UIImage(resource: .avatar1) ,title: "Arisha\(i)")))
-            postItems.append(CellItem(post: PostItem(image: UIImage(resource: .post), title: "Arisha\(i)", likeText: likeText, bodyText: bodyText, isLiked: false, isBookmark: false)))
-        }
-    }
     
     func buttonLikePres(_ sender: PostBottomBarView) {
         var snapshot = collectionDataSource.snapshot()
@@ -198,6 +179,60 @@ class ViewController: UIViewController, UICollectionViewDelegate, PostBottomBarV
         
     }
     
+    func downlaodImage(){
+        
+        if let id = Auth.auth().currentUser?.uid {
+            Firestore.firestore().collection(id).document("postItems").collection("postItem").getDocuments { snapshot, error in
+                if error == nil {
+                    if let snapshot = snapshot?.documents {
+                        self.titleItems = []
+                        self.postItems = []
+                        for snap in snapshot {
+                            let snapData = snap.data()
+                            let id = snapshot.firstIndex(of: snap)
+                            let bodyString = snapData["bodyText"] as? String
+                            let name = snapData["title"] as? String
+                            let imageId = snapData["imageId"] as! String
+                            var image: UIImage?
+                            
+                            StorageManager.shared.download(id: imageId) { result in
+                                switch result {
+                                case .success(let data):
+                                    if let imageOne = UIImage(data: data) {
+                                        image = imageOne
+                                        self.fillItems(id: id!, bodyString: bodyString ?? "Error", name: name ?? "Error", image: image ?? UIImage(resource: .post))
+                                    }
+                                case .failure(let error):
+                                    print(error.localizedDescription)
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
+    func fillItems(id: Int, bodyString: String, name: String, image: UIImage){
+        let likeText = NSMutableAttributedString(string: "Likes: \(id)")
+        let bodyText = NSMutableAttributedString(string: bodyString)
+        let range = (likeText.string as NSString).range(of: "Likes:")
+        likeText.addAttribute(.font, value: UIFont.systemFont(ofSize: 17, weight: .semibold), range: range)
+        let rangeBody = (bodyText.string as NSString).range(of: name)
+        bodyText.addAttribute(.font, value: UIFont.systemFont(ofSize: 17, weight: .semibold), range: rangeBody)
+        
+//        self.titleItems.append(CellItem(story: StoryItem(image: UIImage(resource: .avatar1) ,title: name)))
+        self.postItems.append(CellItem(post: PostItem(image: image, title: name, likeText: likeText, bodyText: bodyText, isLiked: false, isBookmark: false)))
+        
+        var snapshot = collectionDataSource.snapshot()
+        snapshot.deleteAllItems()
+        snapshot.appendSections([.first, .second])
+        snapshot.appendItems(self.titleItems, toSection: .first)
+        snapshot.appendItems(self.postItems, toSection: .second)
+        self.collectionDataSource.apply(snapshot, animatingDifferences: true)
+        self.mainCollectionView.reloadData()
+    }
+    
     func buttonBookmark(_ sender: PostBottomBarView) {
         
     }
@@ -231,7 +266,7 @@ class ViewController: UIViewController, UICollectionViewDelegate, PostBottomBarV
         }
         print(accountItems)
         delegate?.sendItems(items: accountItems)
-        navigationController?.pushViewController(accountVC, animated: false)
+        navigationController?.viewControllers = [accountVC]
     }
     
     func buttonHomePressed(_ sender: ToolBarView) {
@@ -248,3 +283,4 @@ class ViewController: UIViewController, UICollectionViewDelegate, PostBottomBarV
     }
     
 }
+

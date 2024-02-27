@@ -7,10 +7,10 @@
 
 import UIKit
 import Firebase
-class AccountViewController: UIViewController, AccountNavBarViewDelegate, ToolBarViewDelegate, SendItemsDelegate {
+class AccountViewController: UIViewController, AccountNavBarViewDelegate, /*ToolBarViewDelegate,*/ SendItemsDelegate {
     
     let navBarView = AccountNavBarView()
-    let toolBar = ToolBarView()
+//    let toolBar = ToolBarView()
     let accountView = MainAccountView()
     lazy var collectionView = UICollectionView(frame: .zero, collectionViewLayout: getCompositionalLayout())
     var accountItems: [CellItem] = []
@@ -22,12 +22,11 @@ class AccountViewController: UIViewController, AccountNavBarViewDelegate, ToolBa
         constraints()
         collectionViewParameters()
         view.backgroundColor = .systemBackground
-        toolBar.delegate = self
+//        toolBar.delegate = self
         navBarView.delegate = self
         
         let cellRegistration = UICollectionView.CellRegistration<AccountCollectionViewCell, CellItem> {
             cell, indexPath, itemIdentifier in
-            
             cell.imageView.image = itemIdentifier.account?.image
         }
         
@@ -45,11 +44,11 @@ class AccountViewController: UIViewController, AccountNavBarViewDelegate, ToolBa
     
     private func constraints(){
         view.addSubview(navBarView)
-        view.addSubview(toolBar)
+//        view.addSubview(toolBar)
         view.addSubview(accountView)
         view.addSubview(collectionView)
         navBarView.translatesAutoresizingMaskIntoConstraints = false
-        toolBar.translatesAutoresizingMaskIntoConstraints = false
+//        toolBar.translatesAutoresizingMaskIntoConstraints = false
         accountView.translatesAutoresizingMaskIntoConstraints = false
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
@@ -66,12 +65,12 @@ class AccountViewController: UIViewController, AccountNavBarViewDelegate, ToolBa
             collectionView.topAnchor.constraint(equalTo: accountView.bottomAnchor),
             collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            collectionView.bottomAnchor.constraint(equalTo: toolBar.topAnchor),
+            collectionView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
             
-            toolBar.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            toolBar.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            toolBar.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
-            toolBar.heightAnchor.constraint(equalToConstant: 50)
+//            toolBar.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+//            toolBar.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+//            toolBar.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+//            toolBar.heightAnchor.constraint(equalToConstant: 50)
         ])
     }
     
@@ -119,7 +118,7 @@ class AccountViewController: UIViewController, AccountNavBarViewDelegate, ToolBa
     }
     func buttonHomePressed(_ sender: ToolBarView) {
         let vc = ViewController()
-        navigationController?.pushViewController(vc, animated: false)
+        navigationController?.viewControllers = [vc]
     }
     
     func buttonAddPostPressed(_ sender: AccountNavBarView) {

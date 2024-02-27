@@ -26,6 +26,9 @@ class PostCommentsView: UIView {
         
     }
     
+    deinit {
+        bodyLabel.numberOfLines = 3
+    }
     private func constraints(){
         bodyLabel.translatesAutoresizingMaskIntoConstraints = false
         likeLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -42,7 +45,8 @@ class PostCommentsView: UIView {
             
             bodyLabel.topAnchor.constraint(equalTo: likeLabel.bottomAnchor, constant: 5),
             bodyLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 5),
-            bodyLabel.heightAnchor.constraint(equalToConstant: 20),
+            bodyLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -5),
+            bodyLabel.heightAnchor.constraint(greaterThanOrEqualToConstant: 20),
             
             buttonLookComments.topAnchor.constraint(equalTo: bodyLabel.bottomAnchor, constant: 5),
             buttonLookComments.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 5),
@@ -56,7 +60,19 @@ class PostCommentsView: UIView {
     }
     
     private func bodyLabelParameters(){
-        bodyLabel.text = "Big body test text pmspamp"
+        bodyLabel.numberOfLines = 3
+        let gestureRecognizer = UITapGestureRecognizer()
+        gestureRecognizer.addTarget(self, action: #selector(bodyLabelTarget))
+        bodyLabel.addGestureRecognizer(gestureRecognizer)
+        bodyLabel.isUserInteractionEnabled = true
+    }
+    
+    @objc func bodyLabelTarget(){
+        if bodyLabel.numberOfLines == 3 {
+            bodyLabel.numberOfLines = 0
+        } else {
+            bodyLabel.numberOfLines = 3
+        }
     }
     
     private func buttonLookCommentParameters(){

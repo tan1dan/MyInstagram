@@ -24,11 +24,12 @@ class SplashScreenViewController: UIViewController {
                 nextVC = AuthViewController()
             }
             else{
-                nextVC = ViewController()
+                nextVC = TabBarController()
             }
         }
         DispatchQueue.main.asyncAfter(deadline: .now() + 2){
             self.navigationController?.pushViewController(nextVC, animated: false)
+            self.navigationController?.setNavigationBarHidden(true, animated: false)
         }
         }
    

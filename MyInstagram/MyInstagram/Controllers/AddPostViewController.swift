@@ -9,6 +9,7 @@ import UIKit
 import PhotosUI
 import FirebaseAuth
 import FirebaseFirestore
+import FirebaseStorage
 
 enum NotificationStorage {
     static let name = NSNotification.Name.init("AddPostViewController")
@@ -54,13 +55,11 @@ class AddPostViewController: UIViewController, PHPickerViewControllerDelegate, U
         if imageView.image != nil && textView.textColor != .lightGray {
             let post = PostItem(image: imageView.image, title: "Name of Account", likeText:NSMutableAttributedString(string: "Likes: 0"), bodyText: NSMutableAttributedString(string: "NAME " + textView.text), isLiked: false, isBookmark: false)
             NotificationCenter.default.post(name: NotificationStorage.name, object: self, userInfo: ["NewPost" : post])
-            
-            setData()
-            
-            
-            
-            navigationController?.pushViewController(ViewController(), animated: true)
+            if let image = post.image {
+                setData(image: image)
+            }
             navigationController?.setNavigationBarHidden(true, animated: false)
+            navigationController?.setViewControllers([TabBarController()], animated: false)
         } else if imageView.image == nil && textView.textColor == .lightGray {
             showAlert("Error", description: "Please choose a text and image to add Post", completion: nil)
         } else if imageView.image == nil && textView.textColor != .lightGray {
@@ -190,7 +189,7 @@ class AddPostViewController: UIViewController, PHPickerViewControllerDelegate, U
         self.present(controller, animated: true)
     }
     
-    private func setData(){
+    private func setData(image: UIImage){
         var name: String?
         if let id = Auth.auth().currentUser?.uid {
             Firestore.firestore().document("\(id)/accountInformation").getDocument { snapshot, error in
@@ -207,8 +206,11 @@ class AddPostViewController: UIViewController, PHPickerViewControllerDelegate, U
             if let id = Auth.auth().currentUser?.uid {
                 guard let name = name else {return}
                 guard let text = self.textView.text else {return}
+                let imageId = UUID().uuidString
+                guard let imageData = image.jpegData(compressionQuality: 0.3) else { return }
                 let database = Firestore.firestore().collection(id).document("postItems").collection("postItem").document(UUID().uuidString)
-                database.setData(["title" : name, "bodyText": "\(name): \(text)"])
+                database.setData(["title" : name, "bodyText": "\(name): \(text)", "imageId": imageId])
+                StorageManager.shared.upload(id: imageId, image: imageData)
             }
         }))
         

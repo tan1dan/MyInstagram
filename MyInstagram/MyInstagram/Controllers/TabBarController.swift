@@ -12,20 +12,45 @@ class TabBarController: UITabBarController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupTabs()
-    }
-    private func setupTabs(){
-        let vc = ViewController()
-        let scoreVC = ScoreViewController()
-        let game = createNav(with: "Game", and: UIImage(systemName: "gamecontroller"), vc: vc)
-        let score = createNav(with: "Score", and: UIImage(systemName: "list.number"), vc: scoreVC)
-        scoreVC.delegate = vc
-        self.setViewControllers([game, score], animated: true)
+        delegate = self
     }
     
-    private func createNav(with title: String, and image: UIImage? , vc: UIViewController) -> UINavigationController {
+    private func setupTabs(){
+        let homeVC = ViewController()
+        let action = UIAlertAction(title: "Ok", style: .default) { _ in
+            self.navigationController?.popViewController(animated: false)
+        }
+        let searchVC = UIAlertController(title: "Soon", message: "Will be soon", preferredStyle: .alert)
+        searchVC.addAction(action)
+        let addPostVC = AddPostViewController()
+        let reelsVC = UIAlertController(title: "Soon", message: "Will be soon", preferredStyle: .alert)
+        reelsVC.addAction(action)
+        let accountVC = AccountViewController()
+        
+        let home = createNav(image: UIImage(systemName: "house"), vc: homeVC)
+        let search = createNav(image: UIImage(systemName: "magnifyingglass"), vc: searchVC)
+        let addPost = createNav(image: UIImage(systemName: "plus.viewfinder"), vc: addPostVC)
+        let reels = createNav(image: UIImage(systemName: "play.square"), vc: reelsVC)
+        let account = createNav(image: UIImage(systemName: "person.crop.circle"), vc: accountVC)
+        
+        self.setViewControllers([home, search, addPost, reels, account], animated: true)
+    }
+    
+    private func createNav(image: UIImage? , vc: UIViewController) -> UINavigationController {
         let nav = UINavigationController(rootViewController: vc)
-        nav.tabBarItem.title = title
         nav.tabBarItem.image = image
         return nav
     }
+    
+}
+
+extension TabBarController: UITabBarControllerDelegate {
+    func tabBarController(_ tabBarController: UITabBarController, didSelect viewController: UIViewController) {
+        
+    }
+//    override func tabBar(_ tabBar: UITabBar, didSelect item: UITabBarItem) {
+//        if item == tabBar.items?[2] {
+//            navigationController?.pushViewController(AddPostViewController(), animated: true)
+//        }
+//    }
 }
