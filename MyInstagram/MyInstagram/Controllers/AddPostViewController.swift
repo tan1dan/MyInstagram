@@ -44,6 +44,8 @@ class AddPostViewController: UIViewController, PHPickerViewControllerDelegate, U
     
     @objc func backButtonTarget(){
         navigationController?.popViewController(animated: true)
+        guard let tabVC = navigationController?.visibleViewController as? TabBarController else {return}
+        tabVC.selectedIndex = 0
         navigationController?.setNavigationBarHidden(true, animated: false)
     }
     

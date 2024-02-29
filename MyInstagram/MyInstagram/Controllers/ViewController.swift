@@ -19,7 +19,7 @@ enum Section: Hashable, CaseIterable {
     case second
 }
 
-class ViewController: UIViewController, UICollectionViewDelegate, PostBottomBarViewDelegate, /*ToolBarViewDelegate,*/ MainBarViewDelegate{
+class ViewController: UIViewController, UICollectionViewDelegate, PostBottomBarViewDelegate, /*ToolBarViewDelegate,*/ MainBarViewDelegate{    
     
     let navBarView = MainNavBarView()
 //    let toolBar = ToolBarView()
@@ -237,11 +237,6 @@ class ViewController: UIViewController, UICollectionViewDelegate, PostBottomBarV
         
     }
     
-    func buttonAddPostPress(_ sender: ToolBarView) {
-        let addPostViewController = AddPostViewController()
-        navigationController?.pushViewController(addPostViewController, animated: true)
-    }
-    
     func buttonAddPostPressed(_ sender: MainNavBarView) {
         let addPostViewController = AddPostViewController()
         navigationController?.pushViewController(addPostViewController, animated: true)
@@ -280,6 +275,11 @@ class ViewController: UIViewController, UICollectionViewDelegate, PostBottomBarV
         snapshot.appendItems([CellItem(post: post)], toSection: .second)
         collectionDataSource.apply(snapshot, animatingDifferences: false)
         print(postItems)
+    }
+    
+    func sendItems(){
+        let items = self.postItems
+        delegate?.sendItems(items: items)
     }
     
 }

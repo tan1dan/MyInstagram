@@ -7,16 +7,16 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "A2392E75-3CA2-4233-8015-DD99F53C325D"
+            uuid = "EBFCFD81-76E1-44E2-8FEB-5DE81E0BBBBB"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "MyInstagram/Controllers/TabBarController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "49"
-            endingLineNumber = "49"
-            landmarkName = "tabBarController(_:didSelect:)"
+            startingLineNumber = "47"
+            endingLineNumber = "47"
+            landmarkName = "setupTabs()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

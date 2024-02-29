@@ -7,6 +7,7 @@
 
 import UIKit
 import Firebase
+
 class AccountViewController: UIViewController, AccountNavBarViewDelegate, /*ToolBarViewDelegate,*/ SendItemsDelegate {
     
     let navBarView = AccountNavBarView()
@@ -16,6 +17,8 @@ class AccountViewController: UIViewController, AccountNavBarViewDelegate, /*Tool
     var accountItems: [CellItem] = []
     
     var collectionDataSource: UICollectionViewDiffableDataSource<Section, CellItem>!
+    
+    var sendItems: (() -> [CellItem])?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -76,7 +79,9 @@ class AccountViewController: UIViewController, AccountNavBarViewDelegate, /*Tool
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-    
+        if let items = sendItems?() {
+            accountItems = items
+        }
     }
     
     func getCompositionalLayout() -> UICollectionViewCompositionalLayout {
@@ -108,17 +113,9 @@ class AccountViewController: UIViewController, AccountNavBarViewDelegate, /*Tool
         navigationController?.pushViewController(addPostViewController, animated: true)
     }
     
-    func buttonAccountPressed(_ sender: ToolBarView) {
-        
-    }
     func sendItems(items: [CellItem]) {
-        
         accountItems = items
         print(accountItems)
-    }
-    func buttonHomePressed(_ sender: ToolBarView) {
-        let vc = ViewController()
-        navigationController?.viewControllers = [vc]
     }
     
     func buttonAddPostPressed(_ sender: AccountNavBarView) {
