@@ -28,14 +28,18 @@ class ViewController: UIViewController, UICollectionViewDelegate, PostBottomBarV
     var collectionDataSource: UICollectionViewDiffableDataSource<Section, CellItem>!
     var titleItems: [CellItem] = []
     var postItems: [CellItem] = []
-    weak var delegate: SendItemsDelegate?
+    
+    let refreshControl = UIRefreshControl()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
+        refreshControl.addTarget(self, action: #selector(refreshTarget), for: .valueChanged)
         constraints()
         navControllerParameters()
         storyCollectionViewParameters()
         delegateParameters()
+        downlaodImage()
         NotificationCenter.default.addObserver(self, selector: #selector(notificationReceived), name: NotificationStorage.name, object: nil)
         
         let storyCellRegistration = UICollectionView.CellRegistration<StoryCollectionViewCell, CellItem> {
@@ -74,7 +78,7 @@ class ViewController: UIViewController, UICollectionViewDelegate, PostBottomBarV
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        downlaodImage()
+//        downlaodImage()
     }
     
     
@@ -138,6 +142,7 @@ class ViewController: UIViewController, UICollectionViewDelegate, PostBottomBarV
         mainCollectionView.register(StoryCollectionViewCell.self, forCellWithReuseIdentifier: StoryCollectionViewCell.id)
         mainCollectionView.register(PostCollectionViewCell.self, forCellWithReuseIdentifier: PostCollectionViewCell.id)
         mainCollectionView.showsVerticalScrollIndicator = false
+        mainCollectionView.refreshControl = refreshControl
     }
     
     func navControllerParameters(){
@@ -250,23 +255,6 @@ class ViewController: UIViewController, UICollectionViewDelegate, PostBottomBarV
         
     }
     
-    func buttonAccountPressed(_ sender: ToolBarView) {
-        let accountVC = AccountViewController()
-        delegate = accountVC
-        var accountItems: [CellItem] = []
-        var count = 0
-        for item in postItems{
-            count += 1
-            accountItems.append(CellItem(account: AccountItem(id: "\(count)", image: item.post?.image ?? UIImage())))
-        }
-        print(accountItems)
-        delegate?.sendItems(items: accountItems)
-        navigationController?.viewControllers = [accountVC]
-    }
-    
-    func buttonHomePressed(_ sender: ToolBarView) {
-        
-    }
     
     @objc func notificationReceived(_ notification: NSNotification){
         let post = notification.userInfo?["NewPost"] as? PostItem
@@ -276,11 +264,12 @@ class ViewController: UIViewController, UICollectionViewDelegate, PostBottomBarV
         collectionDataSource.apply(snapshot, animatingDifferences: false)
         print(postItems)
     }
-    
-    func sendItems(){
-        let items = self.postItems
-        delegate?.sendItems(items: items)
+    @objc func refreshTarget() {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+            defer { self.mainCollectionView.reloadData() }
+            self.downlaodImage()
+            self.refreshControl.endRefreshing()
+        }
     }
-    
 }
 

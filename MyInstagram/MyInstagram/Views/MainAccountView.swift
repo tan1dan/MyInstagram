@@ -39,10 +39,11 @@ class MainAccountView: UIView {
     
     override func layoutSubviews() {
         super.layoutSubviews()
-        defer { print(avatarImageView.layer.frame.size.width)}
-        print(avatarImageView.layer.frame.size.width)
-        avatarImageView.layer.cornerRadius = CGFloat(avatarImageView.layer.bounds.size.width / 2)
-        avatarImageView.layer.masksToBounds = true
+        
+//        defer { print(avatarImageView.layer.frame.size.width)}
+//        print(avatarImageView.layer.frame.size.width)
+//        avatarImageView.layer.cornerRadius = CGFloat(avatarImageView.layer.bounds.size.width / 2)
+//        avatarImageView.layer.masksToBounds = true
         
     }
     
@@ -51,6 +52,7 @@ class MainAccountView: UIView {
         print(avatarImageView.layer.frame.size.width)
         
     }
+
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -126,10 +128,15 @@ class MainAccountView: UIView {
                 }
             }
         }
+        
+        nameLabel.textAlignment = .center
+        
         labelPosts.text = "Posts"
         labelPosts.textAlignment = .center
+        
         labelNumberOfPosts.text = "0"
         labelNumberOfPosts.textAlignment = .center
+        
         
         labelSubscribers.text = "Subscribers"
         labelSubscribers.textAlignment = .center

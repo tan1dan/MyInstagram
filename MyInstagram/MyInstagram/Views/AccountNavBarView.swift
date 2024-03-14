@@ -76,9 +76,10 @@ class AccountNavBarView: UIView {
             buttonAddPost.trailingAnchor.constraint(equalTo: buttonParameter.leadingAnchor, constant: -20),
             buttonAddPost.heightAnchor.constraint(equalTo: buttonAddPost.widthAnchor, multiplier: 1),
             
-            buttonLogOut.trailingAnchor.constraint(equalTo: buttonAddPost.leadingAnchor, constant: -10),
-            buttonLogOut.topAnchor.constraint(equalTo: topAnchor),
-            buttonLogOut.bottomAnchor.constraint(equalTo: bottomAnchor),
+            buttonLogOut.trailingAnchor.constraint(equalTo: buttonAddPost.leadingAnchor, constant: -20),
+            buttonLogOut.topAnchor.constraint(equalTo: topAnchor, constant: 7),
+            buttonLogOut.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -7),
+            buttonLogOut.heightAnchor.constraint(equalTo: buttonLogOut.widthAnchor, multiplier: 1),
         ])
     }
     
@@ -98,7 +99,11 @@ class AccountNavBarView: UIView {
         buttonAddPost.contentMode = .scaleAspectFill
         buttonAddPost.addTarget(self, action: #selector(buttonAddPostTapped), for: .touchUpInside)
         
-        buttonLogOut.setTitle("Logout", for: .normal)
+        buttonLogOut.setImage(UIImage(systemName: "door.left.hand.open"), for: .normal)
+        buttonLogOut.tintColor = .black
+        buttonLogOut.contentVerticalAlignment = .fill
+        buttonLogOut.contentHorizontalAlignment = .fill
+        buttonLogOut.contentMode = .scaleAspectFill
         buttonLogOut.addTarget(self, action: #selector(buttonLogOutTapped), for: .touchUpInside)
     }
     

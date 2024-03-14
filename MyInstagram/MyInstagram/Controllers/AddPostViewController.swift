@@ -44,8 +44,6 @@ class AddPostViewController: UIViewController, PHPickerViewControllerDelegate, U
     
     @objc func backButtonTarget(){
         navigationController?.popViewController(animated: true)
-        guard let tabVC = navigationController?.visibleViewController as? TabBarController else {return}
-        tabVC.selectedIndex = 0
         navigationController?.setNavigationBarHidden(true, animated: false)
     }
     
@@ -56,12 +54,11 @@ class AddPostViewController: UIViewController, PHPickerViewControllerDelegate, U
     @objc func addPostButtonTarget(){
         if imageView.image != nil && textView.textColor != .lightGray {
             let post = PostItem(image: imageView.image, title: "Name of Account", likeText:NSMutableAttributedString(string: "Likes: 0"), bodyText: NSMutableAttributedString(string: "NAME " + textView.text), isLiked: false, isBookmark: false)
-            NotificationCenter.default.post(name: NotificationStorage.name, object: self, userInfo: ["NewPost" : post])
             if let image = post.image {
                 setData(image: image)
             }
             navigationController?.setNavigationBarHidden(true, animated: false)
-            navigationController?.setViewControllers([TabBarController()], animated: false)
+            navigationController?.popViewController(animated: true)
         } else if imageView.image == nil && textView.textColor == .lightGray {
             showAlert("Error", description: "Please choose a text and image to add Post", completion: nil)
         } else if imageView.image == nil && textView.textColor != .lightGray {
@@ -117,6 +114,7 @@ class AddPostViewController: UIViewController, PHPickerViewControllerDelegate, U
     }
     //MARK: - PHPickerViewControllerDelegate
     func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
+        print(picker.nibBundle?.resourceURL)
         if results.count == 1 {
             let itemProviders = results.map { $0.itemProvider }
             for item in itemProviders {
@@ -227,3 +225,4 @@ extension PHPickerViewController {
         self.present(controller, animated: true)
     }
 }
+

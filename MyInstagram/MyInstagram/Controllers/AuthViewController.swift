@@ -124,7 +124,7 @@ extension AuthViewController{
                             
                             print(result.user.uid)
                         }
-                        self.navigationController?.pushViewController(ViewController(), animated: true)
+                        self.navigationController?.pushViewController(TabBarController(), animated: true)
                     }
                 }
                 
@@ -135,7 +135,7 @@ extension AuthViewController{
             if (!email.isEmpty && !password.isEmpty){
                 Auth.auth().signIn(withEmail: email, password: password) { result, error in
                     if error == nil {
-                        self.navigationController?.pushViewController(ViewController(), animated: true)
+                        self.navigationController?.pushViewController(TabBarController(), animated: true)
                     } else {
                         self.showAlert(title: "Error", message: "Wrong password or login")
                     }

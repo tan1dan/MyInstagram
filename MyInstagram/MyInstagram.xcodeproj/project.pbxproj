@@ -33,6 +33,8 @@
 		F7257FA52B55C0520029B8A6 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = F7257FA42B55C0520029B8A6 /* GoogleService-Info.plist */; };
 		F76F49E52B8501150015BC4D /* StorageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F76F49E42B8501150015BC4D /* StorageManager.swift */; };
 		F76F49E72B8A6F540015BC4D /* TabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F76F49E62B8A6F540015BC4D /* TabBarController.swift */; };
+		F77FA8CB2B9CF00500B10B83 /* MainAccountViewUpdate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F77FA8CA2B9CF00500B10B83 /* MainAccountViewUpdate.swift */; };
+		F77FA8CD2BA0E15200B10B83 /* AccountPostsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F77FA8CC2BA0E15200B10B83 /* AccountPostsViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -66,6 +68,8 @@
 		F7257FA42B55C0520029B8A6 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		F76F49E42B8501150015BC4D /* StorageManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StorageManager.swift; sourceTree = "<group>"; };
 		F76F49E62B8A6F540015BC4D /* TabBarController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TabBarController.swift; sourceTree = "<group>"; };
+		F77FA8CA2B9CF00500B10B83 /* MainAccountViewUpdate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainAccountViewUpdate.swift; sourceTree = "<group>"; };
+		F77FA8CC2BA0E15200B10B83 /* AccountPostsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountPostsViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -148,6 +152,7 @@
 				F721F8902B2F574300652917 /* ViewController.swift */,
 				F76F49E62B8A6F540015BC4D /* TabBarController.swift */,
 				F721F8A02B2F5A1500652917 /* SplashScreenViewController.swift */,
+				F77FA8CC2BA0E15200B10B83 /* AccountPostsViewController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -159,6 +164,7 @@
 				F721F8C42B3A3E9C00652917 /* MainNavBarView.swift */,
 				F7257F9C2B509C2F0029B8A6 /* AccountNavBarView.swift */,
 				F7257F9E2B5157C20029B8A6 /* MainAccountView.swift */,
+				F77FA8CA2B9CF00500B10B83 /* MainAccountViewUpdate.swift */,
 				F721F8D02B3C07D100652917 /* StoryCollectionViewCell.swift */,
 				F721F8D42B41A1B600652917 /* PostCollectionViewCell.swift */,
 				F7257FA02B5308DF0029B8A6 /* AccountCollectionViewCell.swift */,
@@ -309,6 +315,7 @@
 				F721F8FB2B4442CE00652917 /* PostCommentsView.swift in Sources */,
 				F7257F9B2B509B830029B8A6 /* AccountViewController.swift in Sources */,
 				F721F8D92B41D26200652917 /* PostBottomBarView.swift in Sources */,
+				F77FA8CD2BA0E15200B10B83 /* AccountPostsViewController.swift in Sources */,
 				F721F8C52B3A3E9C00652917 /* MainNavBarView.swift in Sources */,
 				F7257F992B4ED8560029B8A6 /* AddPostViewController.swift in Sources */,
 				F721F8D72B41A22200652917 /* PostHeadBarView.swift in Sources */,
@@ -318,6 +325,7 @@
 				F721F88D2B2F574300652917 /* AppDelegate.swift in Sources */,
 				F721F8D52B41A1B600652917 /* PostCollectionViewCell.swift in Sources */,
 				F7257F9D2B509C2F0029B8A6 /* AccountNavBarView.swift in Sources */,
+				F77FA8CB2B9CF00500B10B83 /* MainAccountViewUpdate.swift in Sources */,
 				F76F49E72B8A6F540015BC4D /* TabBarController.swift in Sources */,
 				F721F88F2B2F574300652917 /* SceneDelegate.swift in Sources */,
 				F7257F9F2B5157C20029B8A6 /* MainAccountView.swift in Sources */,

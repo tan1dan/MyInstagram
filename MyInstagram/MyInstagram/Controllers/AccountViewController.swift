@@ -12,13 +12,12 @@ class AccountViewController: UIViewController, AccountNavBarViewDelegate, /*Tool
     
     let navBarView = AccountNavBarView()
 //    let toolBar = ToolBarView()
-    let accountView = MainAccountView()
+    let accountView = MainAccountViewUpdate()
     lazy var collectionView = UICollectionView(frame: .zero, collectionViewLayout: getCompositionalLayout())
     var accountItems: [CellItem] = []
-    
+    var postItems: [CellItem] = []
     var collectionDataSource: UICollectionViewDiffableDataSource<Section, CellItem>!
     
-    var sendItems: (() -> [CellItem])?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -79,9 +78,8 @@ class AccountViewController: UIViewController, AccountNavBarViewDelegate, /*Tool
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        if let items = sendItems?() {
-            accountItems = items
-        }
+        accountView.avatarImageView.layer.cornerRadius = accountView.avatarImageView.frame.size.width / 2
+        accountView.avatarImageView.clipsToBounds = true
     }
     
     func getCompositionalLayout() -> UICollectionViewCompositionalLayout {
@@ -104,6 +102,7 @@ class AccountViewController: UIViewController, AccountNavBarViewDelegate, /*Tool
     private func collectionViewParameters(){
         collectionView.register(AccountCollectionViewCell.self, forCellWithReuseIdentifier: AccountCollectionViewCell.id)
         collectionView.showsVerticalScrollIndicator = false
+        collectionView.delegate = self
         
     }
     
@@ -133,6 +132,16 @@ class AccountViewController: UIViewController, AccountNavBarViewDelegate, /*Tool
         } catch {
             print(error)
         }
-        navigationController?.pushViewController(AuthViewController(), animated: true)
+        tabBarController?.navigationController?.setViewControllers([AuthViewController()], animated: false)
+    }
+}
+
+extension AccountViewController: UICollectionViewDelegate {
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let vc = AccountPostsViewController()
+        vc.postItems = postItems
+        vc.indexPath = indexPath
+        tabBarController?.navigationController?.pushViewController(vc, animated: false)
+        tabBarController?.navigationController?.setNavigationBarHidden(false, animated: false)
     }
 }
