@@ -9,6 +9,7 @@ import UIKit
 
 class PostCollectionViewCell: UICollectionViewCell {
     static let id = "PostCollectionViewCell"
+    var postId = "Yuhuu"
     let postHeadBarView = PostHeadBarView()
     let postBottomBarView = PostBottomBarView()
     let imageView = UIImageView()

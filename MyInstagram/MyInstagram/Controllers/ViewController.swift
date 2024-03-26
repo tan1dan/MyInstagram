@@ -19,8 +19,8 @@ enum Section: Hashable, CaseIterable {
     case second
 }
 
-class ViewController: UIViewController, UICollectionViewDelegate, PostBottomBarViewDelegate, /*ToolBarViewDelegate,*/ MainBarViewDelegate{    
-    
+class ViewController: UIViewController, UICollectionViewDelegate, PostBottomBarViewDelegate, /*ToolBarViewDelegate,*/ MainBarViewDelegate{
+   
     let navBarView = MainNavBarView()
 //    let toolBar = ToolBarView()
     lazy var mainCollectionView = UICollectionView(frame: .zero, collectionViewLayout: getCompositionalLayout())
@@ -28,18 +28,18 @@ class ViewController: UIViewController, UICollectionViewDelegate, PostBottomBarV
     var collectionDataSource: UICollectionViewDiffableDataSource<Section, CellItem>!
     var titleItems: [CellItem] = []
     var postItems: [CellItem] = []
-    
     let refreshControl = UIRefreshControl()
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        print(Int.random(in: 100...101))
         view.backgroundColor = .systemBackground
         refreshControl.addTarget(self, action: #selector(refreshTarget), for: .valueChanged)
         constraints()
         navControllerParameters()
         storyCollectionViewParameters()
         delegateParameters()
-        downlaodImage()
+        downloadAvatar()
         NotificationCenter.default.addObserver(self, selector: #selector(notificationReceived), name: NotificationStorage.name, object: nil)
         
         let storyCellRegistration = UICollectionView.CellRegistration<StoryCollectionViewCell, CellItem> {
@@ -53,9 +53,25 @@ class ViewController: UIViewController, UICollectionViewDelegate, PostBottomBarV
             cell.postCommentsView.likeLabel.attributedText = itemIdentifier.post?.likeText
             cell.postCommentsView.bodyLabel.attributedText = itemIdentifier.post?.bodyText
             cell.postHeadBarView.authorLabel.text = itemIdentifier.post?.title
-            
+            cell.postHeadBarView.authorAvatar.image = itemIdentifier.post?.avatar
+
             cell.postBottomBarView.tag = IndexPath.row
+            cell.postId = itemIdentifier.post?.postId ?? "Default value"
             cell.postBottomBarView.delegate = self
+            cell.postBottomBarView.cellIndex = IndexPath.row
+            
+            if itemIdentifier.post?.isLiked == true {
+                cell.postBottomBarView.buttonLike.setImage(UIImage(systemName: "heart.fill")?.withTintColor(.red, renderingMode: .alwaysOriginal), for: .normal)
+            } else {
+                cell.postBottomBarView.buttonLike.setImage(UIImage(systemName: "heart"), for: .normal)
+                cell.postBottomBarView.buttonLike.tintColor = .black
+            }
+            
+            if itemIdentifier.post?.isBookmark == true {
+                cell.postBottomBarView.buttonBookmarks.setImage(UIImage(systemName: "bookmark.fill"), for: .normal)
+            } else {
+                cell.postBottomBarView.buttonBookmarks.setImage(UIImage(systemName: "bookmark"), for: .normal)
+            }
         }
         
         collectionDataSource = UICollectionViewDiffableDataSource(collectionView: mainCollectionView) { (collectionView: UICollectionView, indexPath: IndexPath, itemIdentifier: CellItem) -> UICollectionViewCell? in
@@ -151,41 +167,77 @@ class ViewController: UIViewController, UICollectionViewDelegate, PostBottomBarV
     
     
     func buttonLikePres(_ sender: PostBottomBarView) {
-        var snapshot = collectionDataSource.snapshot()
+        let snapshot = collectionDataSource.snapshot()
         let indexPathRow = sender.tag
         let indexPath = IndexPath(row: indexPathRow, section: 1)
         
-        guard var item = collectionDataSource.itemIdentifier(for: indexPath) else { return }
-        let index = snapshot.indexOfItem(item)
-        if item.post?.isLiked == false {
+        guard let item = collectionDataSource.itemIdentifier(for: indexPath) else { return }
+        guard let index = snapshot.indexOfItem(item) else {return}
+        
+        if self.postItems[index].post?.isLiked == false {
             UIView.animate(withDuration: 0.2, animations: {
                 sender.buttonLike.setImage(UIImage(systemName: "heart.fill")?.withTintColor(.red, renderingMode: .alwaysOriginal), for: .normal)
                 let scaleTransform = CGAffineTransform(scaleX: 1.2, y: 1.2)
                 sender.buttonLike.transform = scaleTransform
+                self.postItems[index].post?.isLiked?.toggle()
+                self.postItems[index].post?.countLikes! += 1
+                let isLiked = self.postItems[index].post?.isLiked
+                let countLikes = self.postItems[index].post?.countLikes
+                
+                let likeText = NSMutableAttributedString(string: "Likes: \(countLikes!)")
+                let range = (likeText.string as NSString).range(of: "Likes:")
+                likeText.addAttribute(.font, value: UIFont.systemFont(ofSize: 17, weight: .semibold), range: range)
+                self.postItems[index].post?.likeText = likeText
+                
+                if let id = Auth.auth().currentUser?.uid {
+                    let database = Firestore.firestore().collection(id).document("postItems").collection("postItem").document(self.postItems[index].post?.postId ?? "Default Value")
+                    database.updateData(["isLiked": isLiked, "Likes": countLikes])
+                }
             }){ _ in
                 UIView.animate(withDuration: 0.2) {
                     sender.buttonLike.transform = CGAffineTransform.identity
                 }
+                var snapshot = self.collectionDataSource.snapshot()
+                snapshot.deleteAllItems()
+                snapshot.appendSections([.first, .second])
+                snapshot.appendItems(self.titleItems, toSection: .first)
+                snapshot.appendItems(self.postItems, toSection: .second)
+                self.collectionDataSource.apply(snapshot, animatingDifferences: false)
+                self.mainCollectionView.reloadData()
+                
             }
         } else {
             UIView.animate(withDuration: 0.2) {
                 sender.buttonLike.setImage(UIImage(systemName: "heart"), for: .normal)
+                sender.buttonLike.tintColor = .black
+                self.postItems[index].post?.isLiked?.toggle()
+                self.postItems[index].post?.countLikes! -= 1
+                let isLiked = self.postItems[index].post?.isLiked
+                let countLikes = self.postItems[index].post?.countLikes
+                let likeText = NSMutableAttributedString(string: "Likes: \(countLikes!)")
+                let range = (likeText.string as NSString).range(of: "Likes:")
+                likeText.addAttribute(.font, value: UIFont.systemFont(ofSize: 17, weight: .semibold), range: range)
+                self.postItems[index].post?.likeText = likeText
+                if let id = Auth.auth().currentUser?.uid {
+                    let database = Firestore.firestore().collection(id).document("postItems").collection("postItem").document(self.postItems[index].post?.postId ?? "Default Value")
+                    database.updateData(["isLiked": isLiked, "Likes": countLikes])
+                }
+                
+                
+                var snapshot = self.collectionDataSource.snapshot()
+                snapshot.deleteAllItems()
+                snapshot.appendSections([.first, .second])
+                snapshot.appendItems(self.titleItems, toSection: .first)
+                snapshot.appendItems(self.postItems, toSection: .second)
+                self.collectionDataSource.apply(snapshot, animatingDifferences: false)
+                self.mainCollectionView.reloadData()
             }
+            
         }
-        
-        if var postItem = item.post {
-            postItem.isLiked.toggle()
-            print(postItem.isLiked)
-            item.post = postItem
-        }
-        
-        snapshot.reloadItems([snapshot.itemIdentifiers[index!]])
-        collectionDataSource.apply(snapshot, animatingDifferences: true)
         
     }
     
-    func downlaodImage(){
-        
+    func downlaodImage(avatar: UIImage){
         if let id = Auth.auth().currentUser?.uid {
             Firestore.firestore().collection(id).document("postItems").collection("postItem").getDocuments { snapshot, error in
                 if error == nil {
@@ -198,14 +250,18 @@ class ViewController: UIViewController, UICollectionViewDelegate, PostBottomBarV
                             let bodyString = snapData["bodyText"] as? String
                             let name = snapData["title"] as? String
                             let imageId = snapData["imageId"] as! String
+                            let isLiked = snapData["isLiked"] as! Bool
+                            let isBookmark = snapData["isBookmark"] as! Bool
+                            let countLikes = snapData["Likes"] as! Int
+                            let postId = snapData["postId"] as! String
                             var image: UIImage?
-                            
+                            let avatar = avatar
                             StorageManager.shared.download(id: imageId) { result in
                                 switch result {
                                 case .success(let data):
                                     if let imageOne = UIImage(data: data) {
                                         image = imageOne
-                                        self.fillItems(id: id!, bodyString: bodyString ?? "Error", name: name ?? "Error", image: image ?? UIImage(resource: .post))
+                                        self.fillItems(id: id!, bodyString: bodyString ?? "Error", name: name ?? "Error", image: image ?? UIImage(resource: .post), avatar: avatar, isLiked: isLiked, isBookmark: isBookmark, countLikes: countLikes, postId: postId)
                                     }
                                 case .failure(let error):
                                     print(error.localizedDescription)
@@ -215,11 +271,12 @@ class ViewController: UIViewController, UICollectionViewDelegate, PostBottomBarV
                     }
                 }
             }
+            // Firestore.firestore() storyItems
         }
     }
     
-    func fillItems(id: Int, bodyString: String, name: String, image: UIImage){
-        let likeText = NSMutableAttributedString(string: "Likes: \(id)")
+    func fillItems(id: Int, bodyString: String, name: String, image: UIImage, avatar: UIImage, isLiked: Bool, isBookmark: Bool, countLikes: Int, postId: String){
+        let likeText = NSMutableAttributedString(string: "Likes: \(countLikes)")
         let bodyText = NSMutableAttributedString(string: bodyString)
         let range = (likeText.string as NSString).range(of: "Likes:")
         likeText.addAttribute(.font, value: UIFont.systemFont(ofSize: 17, weight: .semibold), range: range)
@@ -227,7 +284,7 @@ class ViewController: UIViewController, UICollectionViewDelegate, PostBottomBarV
         bodyText.addAttribute(.font, value: UIFont.systemFont(ofSize: 17, weight: .semibold), range: rangeBody)
         
 //        self.titleItems.append(CellItem(story: StoryItem(image: UIImage(resource: .avatar1) ,title: name)))
-        self.postItems.append(CellItem(post: PostItem(image: image, title: name, likeText: likeText, bodyText: bodyText, isLiked: false, isBookmark: false)))
+        self.postItems.append(CellItem(post: PostItem(postId: postId, image: image, avatar: avatar, title: name, likeText: likeText, bodyText: bodyText, isLiked: isLiked, isBookmark: isBookmark, countLikes: countLikes)))
         
         var snapshot = collectionDataSource.snapshot()
         snapshot.deleteAllItems()
@@ -238,13 +295,93 @@ class ViewController: UIViewController, UICollectionViewDelegate, PostBottomBarV
         self.mainCollectionView.reloadData()
     }
     
+    func downloadAvatar(){
+        if let id = Auth.auth().currentUser?.uid {
+            
+            Firestore.firestore().collection("\(id)").document("accountInformation").getDocument { snapshot, error in
+                if error == nil {
+                    if let snapData = snapshot?.data() {
+                        let avatarID = snapData["avatar"] as! String
+                        StorageManager.shared.download(id: avatarID) { result in
+                            switch result {
+                            case .success(let data):
+                                if let avatar = UIImage(data: data) {
+                                    self.downlaodImage(avatar: avatar)
+                                }
+                            case .failure(let error):
+                                print(error.localizedDescription)
+                            }
+                        }
+                    }
+                } else {
+                    print(error?.localizedDescription)
+                }
+            }
+        }
+    }
+    
+    
     func buttonBookmark(_ sender: PostBottomBarView) {
+        var snapshot = collectionDataSource.snapshot()
+        let indexPathRow = sender.tag
+        let indexPath = IndexPath(row: indexPathRow, section: 1)
         
+        guard var item = collectionDataSource.itemIdentifier(for: indexPath) else { return }
+        guard let index = snapshot.indexOfItem(item) else {return}
+        
+        if self.postItems[index].post?.isBookmark == false {
+            UIView.animate(withDuration: 0.2, animations: {
+                sender.buttonBookmarks.setImage(UIImage(systemName: "bookmark.fill"), for: .normal)
+                let scaleTransform = CGAffineTransform(scaleX: 1.1, y: 1.1)
+                sender.buttonBookmarks.transform = scaleTransform
+            }){ _ in
+                UIView.animate(withDuration: 0.2) {
+                    sender.buttonBookmarks.transform = CGAffineTransform.identity
+                }
+                self.postItems[index].post?.isBookmark?.toggle()
+                let isBookmark = self.postItems[index].post?.isBookmark
+                if let id = Auth.auth().currentUser?.uid {
+                    let database = Firestore.firestore().collection(id).document("postItems").collection("postItem").document(self.postItems[index].post?.postId ?? "Default Value")
+                    database.updateData(["isBookmark": isBookmark])
+                }
+                var snapshot = self.collectionDataSource.snapshot()
+                snapshot.deleteAllItems()
+                snapshot.appendSections([.first, .second])
+                snapshot.appendItems(self.titleItems, toSection: .first)
+                snapshot.appendItems(self.postItems, toSection: .second)
+                self.collectionDataSource.apply(snapshot, animatingDifferences: true)
+                self.mainCollectionView.reloadData()
+            }
+        } else {
+            UIView.animate(withDuration: 0.2) {
+                sender.buttonBookmarks.setImage(UIImage(systemName: "bookmark"), for: .normal)
+                self.postItems[index].post?.isBookmark?.toggle()
+                let isBookmark = self.postItems[index].post?.isBookmark
+                if let id = Auth.auth().currentUser?.uid {
+                    let database = Firestore.firestore().collection(id).document("postItems").collection("postItem").document(self.postItems[index].post?.postId ?? "Default Value")
+                    database.updateData(["isBookmark": isBookmark])
+                }
+            }
+            
+            var snapshot = collectionDataSource.snapshot()
+            snapshot.deleteAllItems()
+            snapshot.appendSections([.first, .second])
+            snapshot.appendItems(self.titleItems, toSection: .first)
+            snapshot.appendItems(self.postItems, toSection: .second)
+            self.collectionDataSource.apply(snapshot, animatingDifferences: true)
+            self.mainCollectionView.reloadData()
+        }
     }
     
     func buttonAddPostPressed(_ sender: MainNavBarView) {
         let addPostViewController = AddPostViewController()
         navigationController?.pushViewController(addPostViewController, animated: true)
+    }
+    
+    func buttonComment(_ sender: PostBottomBarView) {
+        let vc = CommentsViewController()
+        vc.postId = postItems[sender.cellIndex ?? 0].post?.postId
+        tabBarController?.navigationController?.present(vc, animated: true)
     }
     
     func buttonLikePressed(_ sender: MainNavBarView) {
@@ -264,12 +401,14 @@ class ViewController: UIViewController, UICollectionViewDelegate, PostBottomBarV
         collectionDataSource.apply(snapshot, animatingDifferences: false)
         print(postItems)
     }
+    
     @objc func refreshTarget() {
         DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
             defer { self.mainCollectionView.reloadData() }
-            self.downlaodImage()
+            self.downloadAvatar()
             self.refreshControl.endRefreshing()
         }
     }
+    
 }
 

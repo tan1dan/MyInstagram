@@ -35,6 +35,9 @@
 		F76F49E72B8A6F540015BC4D /* TabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F76F49E62B8A6F540015BC4D /* TabBarController.swift */; };
 		F77FA8CB2B9CF00500B10B83 /* MainAccountViewUpdate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F77FA8CA2B9CF00500B10B83 /* MainAccountViewUpdate.swift */; };
 		F77FA8CD2BA0E15200B10B83 /* AccountPostsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F77FA8CC2BA0E15200B10B83 /* AccountPostsViewController.swift */; };
+		F7A418142BAC40F300697A5A /* CommentsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7A418132BAC40F300697A5A /* CommentsViewController.swift */; };
+		F7A418162BAC467400697A5A /* CommentTableVieCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7A418152BAC467400697A5A /* CommentTableVieCell.swift */; };
+		F7E31AAD2BAC51840061CD83 /* CommentBottomView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7E31AAC2BAC51840061CD83 /* CommentBottomView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -70,6 +73,9 @@
 		F76F49E62B8A6F540015BC4D /* TabBarController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TabBarController.swift; sourceTree = "<group>"; };
 		F77FA8CA2B9CF00500B10B83 /* MainAccountViewUpdate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainAccountViewUpdate.swift; sourceTree = "<group>"; };
 		F77FA8CC2BA0E15200B10B83 /* AccountPostsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountPostsViewController.swift; sourceTree = "<group>"; };
+		F7A418132BAC40F300697A5A /* CommentsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentsViewController.swift; sourceTree = "<group>"; };
+		F7A418152BAC467400697A5A /* CommentTableVieCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentTableVieCell.swift; sourceTree = "<group>"; };
+		F7E31AAC2BAC51840061CD83 /* CommentBottomView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentBottomView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -153,6 +159,7 @@
 				F76F49E62B8A6F540015BC4D /* TabBarController.swift */,
 				F721F8A02B2F5A1500652917 /* SplashScreenViewController.swift */,
 				F77FA8CC2BA0E15200B10B83 /* AccountPostsViewController.swift */,
+				F7A418132BAC40F300697A5A /* CommentsViewController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -167,10 +174,12 @@
 				F77FA8CA2B9CF00500B10B83 /* MainAccountViewUpdate.swift */,
 				F721F8D02B3C07D100652917 /* StoryCollectionViewCell.swift */,
 				F721F8D42B41A1B600652917 /* PostCollectionViewCell.swift */,
+				F7A418152BAC467400697A5A /* CommentTableVieCell.swift */,
 				F7257FA02B5308DF0029B8A6 /* AccountCollectionViewCell.swift */,
 				F721F8D62B41A22200652917 /* PostHeadBarView.swift */,
 				F721F8D82B41D26200652917 /* PostBottomBarView.swift */,
 				F721F8FA2B4442CE00652917 /* PostCommentsView.swift */,
+				F7E31AAC2BAC51840061CD83 /* CommentBottomView.swift */,
 				F721F8FC2B4AC85F00652917 /* ToolBarView.swift */,
 			);
 			path = Views;
@@ -319,12 +328,15 @@
 				F721F8C52B3A3E9C00652917 /* MainNavBarView.swift in Sources */,
 				F7257F992B4ED8560029B8A6 /* AddPostViewController.swift in Sources */,
 				F721F8D72B41A22200652917 /* PostHeadBarView.swift in Sources */,
+				F7E31AAD2BAC51840061CD83 /* CommentBottomView.swift in Sources */,
 				F721F8D32B3C1BB600652917 /* StoryCellItemStruct.swift in Sources */,
 				F721F8FD2B4AC85F00652917 /* ToolBarView.swift in Sources */,
 				F76F49E52B8501150015BC4D /* StorageManager.swift in Sources */,
+				F7A418162BAC467400697A5A /* CommentTableVieCell.swift in Sources */,
 				F721F88D2B2F574300652917 /* AppDelegate.swift in Sources */,
 				F721F8D52B41A1B600652917 /* PostCollectionViewCell.swift in Sources */,
 				F7257F9D2B509C2F0029B8A6 /* AccountNavBarView.swift in Sources */,
+				F7A418142BAC40F300697A5A /* CommentsViewController.swift in Sources */,
 				F77FA8CB2B9CF00500B10B83 /* MainAccountViewUpdate.swift in Sources */,
 				F76F49E72B8A6F540015BC4D /* TabBarController.swift in Sources */,
 				F721F88F2B2F574300652917 /* SceneDelegate.swift in Sources */,
@@ -545,7 +557,7 @@
 				F721F89C2B2F574600652917 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = Debug;
 		};
 		F721F89D2B2F574600652917 /* Build configuration list for PBXNativeTarget "MyInstagram" */ = {
 			isa = XCConfigurationList;
@@ -554,7 +566,7 @@
 				F721F89F2B2F574600652917 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = Debug;
 		};
 /* End XCConfigurationList section */
 	};

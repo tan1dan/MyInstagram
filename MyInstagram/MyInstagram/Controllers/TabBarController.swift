@@ -83,15 +83,15 @@ extension TabBarController: UITabBarControllerDelegate {
     func tabBarController(_ tabBarController: UITabBarController, didSelect viewController: UIViewController) {
     
         if tabBarController.selectedIndex == 4 {
-            let homeVC = (tabBarController.viewControllers?.first as? UINavigationController)?.viewControllers.first as? ViewController
-            let accountVC = (viewController as? UINavigationController)?.viewControllers.first as? AccountViewController
-            let postItems = homeVC?.postItems
-            var accountItems: [CellItem] = []
-            for post in postItems ?? [] {
-                accountItems.append(CellItem(account: AccountItem(id: UUID().uuidString, image: post.post?.image ?? UIImage())))
-            }
-            accountVC?.accountItems = accountItems
-            accountVC?.postItems = postItems ?? []
+//            let homeVC = (tabBarController.viewControllers?.first as? UINavigationController)?.viewControllers.first as? ViewController
+//            let accountVC = (viewController as? UINavigationController)?.viewControllers.first as? AccountViewController
+//            let postItems = homeVC?.postItems
+//            var accountItems: [CellItem] = []
+//            for post in postItems ?? [] {
+//                accountItems.append(CellItem(account: AccountItem(id: UUID().uuidString, image: post.post?.image ?? UIImage())))
+//            }
+//            accountVC?.accountItems = accountItems
+//            accountVC?.postItems = postItems ?? []
         }
     }
     

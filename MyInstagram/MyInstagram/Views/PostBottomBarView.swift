@@ -10,6 +10,7 @@ import UIKit
 protocol PostBottomBarViewDelegate: AnyObject {
     func buttonLikePres(_ sender: PostBottomBarView)
     func buttonBookmark(_ sender: PostBottomBarView)
+    func buttonComment(_ sender: PostBottomBarView)
 }
 
 
@@ -20,6 +21,7 @@ class PostBottomBarView: UIView {
     let buttonSend = UIButton(type: .system)
     let buttonBookmarks = UIButton(type: .system)
     var isBookmark = false
+    var cellIndex: Int?
     weak var delegate: PostBottomBarViewDelegate?
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -76,6 +78,7 @@ class PostBottomBarView: UIView {
         
         buttonComment.contentVerticalAlignment = .fill
         buttonComment.contentHorizontalAlignment = .fill
+        buttonComment.addTarget(self, action: #selector(buttonCommentTarget), for: .touchUpInside)
         
         buttonSend.contentVerticalAlignment = .fill
         buttonSend.contentHorizontalAlignment = .fill
@@ -90,23 +93,11 @@ class PostBottomBarView: UIView {
     }
     
     @objc func buttonBookmarkTarget(){
-        if !isBookmark {
-            UIView.animate(withDuration: 0.2, animations: {
-                self.buttonBookmarks.setImage(UIImage(systemName: "bookmark.fill"), for: .normal)
-                let scaleTransform = CGAffineTransform(scaleX: 1.1, y: 1.1)
-                self.buttonBookmarks.transform = scaleTransform
-            }){ _ in
-                UIView.animate(withDuration: 0.2) {
-                    self.buttonBookmarks.transform = CGAffineTransform.identity
-                }
-            }
-        } else {
-            UIView.animate(withDuration: 0.2) {
-                self.buttonBookmarks.setImage(UIImage(systemName: "bookmark"), for: .normal)
-            }
-        }
         delegate?.buttonBookmark(self)
-        isBookmark.toggle()
+    }
+    
+    @objc func buttonCommentTarget(){
+        delegate?.buttonComment(self)
     }
     
 }

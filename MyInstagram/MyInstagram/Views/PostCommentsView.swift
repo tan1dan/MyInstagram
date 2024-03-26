@@ -29,6 +29,7 @@ class PostCommentsView: UIView {
     deinit {
         bodyLabel.numberOfLines = 3
     }
+    
     private func constraints(){
         bodyLabel.translatesAutoresizingMaskIntoConstraints = false
         likeLabel.translatesAutoresizingMaskIntoConstraints = false

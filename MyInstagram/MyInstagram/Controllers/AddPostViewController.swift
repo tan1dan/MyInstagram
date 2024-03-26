@@ -207,9 +207,13 @@ class AddPostViewController: UIViewController, PHPickerViewControllerDelegate, U
                 guard let name = name else {return}
                 guard let text = self.textView.text else {return}
                 let imageId = UUID().uuidString
+                let isLiked = false
+                let isBookmark = false
+                let countOfLikes = Int.random(in: 0...1000)
+                let postId = UUID().uuidString
                 guard let imageData = image.jpegData(compressionQuality: 0.3) else { return }
-                let database = Firestore.firestore().collection(id).document("postItems").collection("postItem").document(UUID().uuidString)
-                database.setData(["title" : name, "bodyText": "\(name): \(text)", "imageId": imageId])
+                let database = Firestore.firestore().collection(id).document("postItems").collection("postItem").document(postId)
+                database.setData(["postId": postId, "title" : name, "bodyText": "\(name): \(text)", "imageId": imageId, "isLiked": isLiked, "isBookmark": isBookmark, "Likes": countOfLikes])
                 StorageManager.shared.upload(id: imageId, image: imageData)
             }
         }))
