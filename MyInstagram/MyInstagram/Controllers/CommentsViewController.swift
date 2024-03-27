@@ -34,6 +34,10 @@ class CommentsViewController: UIViewController {
         view.addSubview(tableView)
         view.addSubview(bottomView)
         view.addSubview(titleLabel)
+        
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
+        view.addGestureRecognizer(tapGesture)
+        
         NSLayoutConstraint.activate([
             titleLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             titleLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 15),
@@ -60,6 +64,10 @@ class CommentsViewController: UIViewController {
         super.viewDidLayoutSubviews()
         bottomView.avatarImageView.layer.cornerRadius = bottomView.avatarImageView.frame.size.height / 2
         bottomView.avatarImageView.layer.masksToBounds = true
+    }
+    
+    @objc func dismissKeyboard() {
+        view.endEditing(true)
     }
     
     func downlaodImage(avatar: UIImage){

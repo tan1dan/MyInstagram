@@ -228,7 +228,7 @@ class AccountPostsViewController: UIViewController, PostBottomBarViewDelegate {
     }
     
     func buttonComment(_ sender: PostBottomBarView) {
-        let vc = CommentsViewController()
+         let vc = CommentsViewController()
         vc.postId = postItems[sender.cellIndex ?? 0].post?.postId
         navigationController?.present(vc, animated: true)
     }
