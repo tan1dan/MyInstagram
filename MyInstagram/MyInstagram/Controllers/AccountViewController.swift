@@ -8,10 +8,9 @@
 import UIKit
 import Firebase
 
-class AccountViewController: UIViewController, AccountNavBarViewDelegate, /*ToolBarViewDelegate,*/ SendItemsDelegate { // TODO: remove comments
+class AccountViewController: UIViewController, AccountNavBarViewDelegate,  SendItemsDelegate {
     
     let navBarView = AccountNavBarView()
-//    let toolBar = ToolBarView() // TODO: remove comments
     let accountView = MainAccountViewUpdate()
     let refreshControl = UIRefreshControl()
     lazy var collectionView = UICollectionView(frame: .zero, collectionViewLayout: getCompositionalLayout())
@@ -27,7 +26,6 @@ class AccountViewController: UIViewController, AccountNavBarViewDelegate, /*Tool
         downloadAvatar()
         collectionViewParameters()
         view.backgroundColor = .systemBackground
-//        toolBar.delegate = self // TODO: remove comments
         navBarView.delegate = self
         
         let cellRegistration = UICollectionView.CellRegistration<AccountCollectionViewCell, CellItem> {
@@ -49,11 +47,10 @@ class AccountViewController: UIViewController, AccountNavBarViewDelegate, /*Tool
     
     private func constraints(){
         view.addSubview(navBarView)
-//        view.addSubview(toolBar) // TODO: remove comments
+
         view.addSubview(accountView)
         view.addSubview(collectionView)
         navBarView.translatesAutoresizingMaskIntoConstraints = false
-//        toolBar.translatesAutoresizingMaskIntoConstraints = false // TODO: remove comments
         accountView.translatesAutoresizingMaskIntoConstraints = false
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
@@ -72,11 +69,6 @@ class AccountViewController: UIViewController, AccountNavBarViewDelegate, /*Tool
             collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             collectionView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
             
-            // TODO: remove comments
-//            toolBar.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-//            toolBar.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-//            toolBar.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
-//            toolBar.heightAnchor.constraint(equalToConstant: 50)
         ])
     }
     
@@ -119,12 +111,6 @@ class AccountViewController: UIViewController, AccountNavBarViewDelegate, /*Tool
         collectionView.showsVerticalScrollIndicator = false
         collectionView.delegate = self
         collectionView.refreshControl = refreshControl
-    }
-    
-    // TODO: is this method used?
-    func buttonAddPostPress(_ sender: ToolBarView) {
-        let addPostViewController = AddPostViewController()
-        navigationController?.pushViewController(addPostViewController, animated: true)
     }
     
     func sendItems(items: [CellItem]) {
@@ -186,7 +172,7 @@ extension AccountViewController: UICollectionViewDelegate {
                             let imageId = snapData["imageId"] as! String
                             let isLiked = snapData["isLiked"] as! Bool
                             let isBookmark = snapData["isBookmark"] as! Bool
-                            let countLikes = snapData["Likes"] as! Int
+                            let countLikes = snapData["likes"] as! Int
                             let postId = snapData["postId"] as! String
                             var image: UIImage?
                             let avatar = avatar
@@ -224,7 +210,6 @@ extension AccountViewController: UICollectionViewDelegate {
         let rangeBody = (bodyText.string as NSString).range(of: name)
         bodyText.addAttribute(.font, value: UIFont.systemFont(ofSize: 17, weight: .semibold), range: rangeBody)
         
-//        self.titleItems.append(CellItem(story: StoryItem(image: UIImage(resource: .avatar1) ,title: name)))     // TODO: is this method used?
         self.postItems.append(CellItem(post: PostItem(postId: postId, image: image, avatar: avatar, title: name, likeText: likeText, bodyText: bodyText, isLiked: isLiked, isBookmark: isBookmark, countLikes: countLikes)))
         self.accountItems.append(CellItem(account: AccountItem(id: UUID().uuidString, image: image)))
         var snapshot = collectionDataSource.snapshot()
@@ -255,7 +240,9 @@ extension AccountViewController: UICollectionViewDelegate {
                         }
                     }
                 } else {
-                    print(error?.localizedDescription) // TODO: Remove print, add alert, toast, image or text to show user message
+                    self.showAlertVC("Error", description: "\(error?.localizedDescription ?? "Some error")") { bool in
+                        
+                    }
                 }
             }
         }

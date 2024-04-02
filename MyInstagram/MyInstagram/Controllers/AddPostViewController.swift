@@ -66,11 +66,11 @@ class AddPostViewController: UIViewController, PHPickerViewControllerDelegate, U
             navigationController?.setNavigationBarHidden(true, animated: false)
             navigationController?.popViewController(animated: true)
         } else if imageView.image == nil && textView.textColor == .lightGray {
-            showAlert("Error", description: "Please choose a text and image to add Post", completion: nil)
+            showAlertVC("Error", description: "Please choose a text and image to add Post", completion: nil)
         } else if imageView.image == nil && textView.textColor != .lightGray {
-            showAlert("Error", description: "Please choose an image to add Post", completion: nil)
+            showAlertVC("Error", description: "Please choose an image to add Post", completion: nil)
         } else if textView.textColor == .lightGray && imageView.image != nil {
-            showAlert("Error", description: "Please choose a text to add Post", completion: nil)
+            showAlertVC("Error", description: "Please choose a text to add Post", completion: nil)
         }
     }
     @objc func imageViewTarget(){
@@ -94,7 +94,6 @@ class AddPostViewController: UIViewController, PHPickerViewControllerDelegate, U
         textView.layer.borderWidth = 0.5
         textView.layer.borderColor = UIColor.gray.cgColor
         textView.font = .systemFont(ofSize: 17)
-//        textView.autocapitalizationType = .words
         textView.isScrollEnabled = false
         
         
@@ -120,7 +119,6 @@ class AddPostViewController: UIViewController, PHPickerViewControllerDelegate, U
     }
     //MARK: - PHPickerViewControllerDelegate
     func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
-        print(picker.nibBundle?.resourceURL) // TODO: remove print
         if results.count == 1 {
             let itemProviders = results.map { $0.itemProvider }
             for item in itemProviders {
@@ -187,25 +185,17 @@ class AddPostViewController: UIViewController, PHPickerViewControllerDelegate, U
         ])
     }
     
-    // TODO: remake it as ViewController extension + maybe use default value to title
-    private func showAlert(_ title: String, description: String, completion: ((Bool) -> Void)?) {
-        let controller = UIAlertController(title: title, message: description, preferredStyle: .alert)
-        controller.addAction(UIAlertAction(title: "Ok", style: .default, handler: { _ in
-            completion?(true)
-        }))
-        self.present(controller, animated: true)
-    }
     
     private func setData(image: UIImage){
         var name: String?
         if let id = Auth.auth().currentUser?.uid {
             Firestore.firestore().document("\(id)/accountInformation").getDocument { snapshot, error in
-                if error == nil { // TODO: use if let snapshot = snapshot?.data() only
-                    if let snapshot = snapshot?.data() {
-                        name = snapshot["name"] as? String
-                        
-                    }
+                
+                if let snapshot = snapshot?.data() {
+                    name = snapshot["name"] as? String
+                    
                 }
+                
             }
         }
     
@@ -226,7 +216,7 @@ class AddPostViewController: UIViewController, PHPickerViewControllerDelegate, U
                                   "imageId": imageId,
                                   "isLiked": isLiked,
                                   "isBookmark": isBookmark,
-                                  "Likes": countOfLikes]) // TODO: keep thing the same, use likes insted Likes
+                                  "likes": countOfLikes]) // TODO: keep thing the same, use likes insted Likes
                 StorageManager.shared.upload(id: imageId, image: imageData)
             }
         }))
@@ -237,6 +227,17 @@ class AddPostViewController: UIViewController, PHPickerViewControllerDelegate, U
 // TODO: use show alert from ViewController extension
 extension PHPickerViewController {
     func showAlert(_ title: String, description: String, completion: ((Bool) -> Void)?) {
+        let controller = UIAlertController(title: title, message: description, preferredStyle: .alert)
+        controller.addAction(UIAlertAction(title: "Ok", style: .default, handler: { _ in
+            completion?(true)
+        }))
+        self.present(controller, animated: true)
+    }
+}
+
+extension UIViewController {
+    // TODO: remake it as ViewController extension + maybe use default value to title
+     func showAlertVC(_ title: String, description: String, completion: ((Bool) -> Void)?) {
         let controller = UIAlertController(title: title, message: description, preferredStyle: .alert)
         controller.addAction(UIAlertAction(title: "Ok", style: .default, handler: { _ in
             completion?(true)
