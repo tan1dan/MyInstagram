@@ -132,7 +132,7 @@ class AccountPostsViewController: UIViewController, PostBottomBarViewDelegate {
                 
                 if let id = Auth.auth().currentUser?.uid {
                     let database = Firestore.firestore().collection(id).document("postItems").collection("postItem").document(self.postItems[index].post?.postId ?? "Default Value")
-                    database.updateData(["isLiked": isLiked, "Likes": countLikes])
+                    database.updateData(["isLiked": isLiked, "likes": countLikes])
                 }
             }){ _ in
                 UIView.animate(withDuration: 0.2) {
@@ -161,7 +161,7 @@ class AccountPostsViewController: UIViewController, PostBottomBarViewDelegate {
                 if let id = Auth.auth().currentUser?.uid {
                     let database = Firestore.firestore().collection(id).document("postItems").collection("postItem").document(self.postItems[index].post?.postId ?? "Default Value")
                     database.updateData(["isLiked": isLiked,
-                                         "Likes": countLikes])
+                                         "likes": countLikes])
                 }
                 
                 var snapshot = self.collectionDataSource.snapshot()
@@ -173,7 +173,6 @@ class AccountPostsViewController: UIViewController, PostBottomBarViewDelegate {
             }
             
         }
-        print(self.postItems[index].post?.isLiked) // TODO: remove print
     }
     
     func buttonBookmark(_ sender: PostBottomBarView) {

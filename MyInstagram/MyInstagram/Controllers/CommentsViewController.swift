@@ -35,6 +35,8 @@ class CommentsViewController: UIViewController {
         view.addSubview(bottomView)
         view.addSubview(titleLabel)
         
+        tableView.separatorStyle = .none
+        
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
         view.addGestureRecognizer(tapGesture)
         
@@ -102,7 +104,6 @@ class CommentsViewController: UIViewController {
         let rangeBody = (bodyText.string as NSString).range(of: bodyString)
         bodyText.addAttribute(.font, value: UIFont.systemFont(ofSize: 17, weight: .regular), range: rangeBody)
         
-//        self.titleItems.append(CellItem(story: StoryItem(image: UIImage(resource: .avatar1) ,title: name))) // TODO: remove comments
         self.commentItems.append(CellItem(comment: CommentItem(commentId: commentId, title: title, bodyTitle: bodyText, image: avatar)))
         
         self.tableView.reloadData()
@@ -186,7 +187,6 @@ class CommentsViewController: UIViewController {
 extension CommentsViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        tableView.separatorStyle = .none // TODO: move to viewDidLoad
         return commentItems.count
     }
     

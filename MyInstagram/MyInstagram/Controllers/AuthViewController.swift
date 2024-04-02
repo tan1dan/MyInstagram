@@ -17,12 +17,6 @@ class AuthViewController: UIViewController, PHPickerViewControllerDelegate {
             
             // TODO: use can use ternar operator (?:) for removing redundant if
             if newValue {
-                // TODO: remove comments
-
-//                nameField.isHidden = true
-//                titleLabel.text = "Login"
-//                buttonSwitchStatus.setTitle("Do you not have account?", for: .normal)
-//                buttonSing.setTitle("Login", for: .normal)
                 
                 nameField.isHidden = false
                 imageView.isHidden = false
@@ -30,12 +24,6 @@ class AuthViewController: UIViewController, PHPickerViewControllerDelegate {
                 buttonSwitchStatus.setTitle("Do you have already account?", for: .normal)
                 buttonSing.setTitle("SignUp", for: .normal)
             } else {
-                // TODO: remove comments
-
-//                nameField.isHidden = false
-//                titleLabel.text = "Registration"
-//                buttonSwitchStatus.setTitle("Do you have already account?", for: .normal)
-//                buttonSing.setTitle("SignUp", for: .normal)
                 
                 nameField.isHidden = true
                 imageView.isHidden = true
@@ -146,7 +134,6 @@ class AuthViewController: UIViewController, PHPickerViewControllerDelegate {
     }
     
     private func imageViewParameters() {
-        print(imageView.frame) // TODO: remove print
         imageView.isUserInteractionEnabled = true
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(imageViewTarget))
         imageView.addGestureRecognizer(tapGesture)
@@ -170,7 +157,6 @@ class AuthViewController: UIViewController, PHPickerViewControllerDelegate {
     }
     
     func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
-        print(picker.nibBundle?.resourceURL) // TODO: remove print
         if results.count == 1 {
             let itemProviders = results.map { $0.itemProvider }
             for item in itemProviders {
@@ -189,6 +175,7 @@ class AuthViewController: UIViewController, PHPickerViewControllerDelegate {
         else if results.count >= 2 {
             picker.showAlert("Soon", description: "Adding >1 images to Post will be adding soon", completion: nil)
             // TODO: missing dismiss?
+            // No
         }
     }
 }
@@ -217,7 +204,6 @@ extension AuthViewController{
                                                                                                              "email": email,
                                                                                                              "avatar": avatarID])
                             StorageManager.shared.upload(id: avatarID, image: imageData)
-                            print(result.user.uid) // TODO: remove print
                         }
                         self.navigationController?.pushViewController(TabBarController(), animated: true)
                     }
