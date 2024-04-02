@@ -22,7 +22,7 @@ enum Section: Hashable, CaseIterable {
 class ViewController: UIViewController, UICollectionViewDelegate, PostBottomBarViewDelegate, /*ToolBarViewDelegate,*/ MainBarViewDelegate{
    
     let navBarView = MainNavBarView()
-//    let toolBar = ToolBarView()
+//    let toolBar = ToolBarView() // TODO: remove comments
     lazy var mainCollectionView = UICollectionView(frame: .zero, collectionViewLayout: getCompositionalLayout())
     
     var collectionDataSource: UICollectionViewDiffableDataSource<Section, CellItem>!
@@ -32,7 +32,7 @@ class ViewController: UIViewController, UICollectionViewDelegate, PostBottomBarV
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        print(Int.random(in: 100...101))
+        print(Int.random(in: 100...101)) // TODO: remove print
         view.backgroundColor = .systemBackground
         refreshControl.addTarget(self, action: #selector(refreshTarget), for: .valueChanged)
         constraints()
@@ -94,17 +94,17 @@ class ViewController: UIViewController, UICollectionViewDelegate, PostBottomBarV
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-//        downlaodImage()
+//        downlaodImage() // TODO: remove comments
     }
     
     
     func constraints(){
         view.addSubview(navBarView)
         view.addSubview(mainCollectionView)
-//        view.addSubview(toolBar)
+//        view.addSubview(toolBar) // TODO: remove comments
         navBarView.translatesAutoresizingMaskIntoConstraints = false
         mainCollectionView.translatesAutoresizingMaskIntoConstraints = false
-//        toolBar.translatesAutoresizingMaskIntoConstraints = false
+//        toolBar.translatesAutoresizingMaskIntoConstraints = false // TODO: remove comments
         NSLayoutConstraint.activate([
             navBarView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 5),
             navBarView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 15),
@@ -116,6 +116,7 @@ class ViewController: UIViewController, UICollectionViewDelegate, PostBottomBarV
             mainCollectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             mainCollectionView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
             
+            // TODO: remove comments
 //            toolBar.topAnchor.constraint(equalTo: mainCollectionView.bottomAnchor),
 //            toolBar.leadingAnchor.constraint(equalTo: view.leadingAnchor),
 //            toolBar.trailingAnchor.constraint(equalTo: view.trailingAnchor),
@@ -125,7 +126,7 @@ class ViewController: UIViewController, UICollectionViewDelegate, PostBottomBarV
     }
     
     private func delegateParameters(){
-//        toolBar.delegate = self
+//        toolBar.delegate = self // TODO: remove comments
         mainCollectionView.delegate = self
         navBarView.delegate = self
     }
@@ -191,7 +192,8 @@ class ViewController: UIViewController, UICollectionViewDelegate, PostBottomBarV
                 
                 if let id = Auth.auth().currentUser?.uid {
                     let database = Firestore.firestore().collection(id).document("postItems").collection("postItem").document(self.postItems[index].post?.postId ?? "Default Value")
-                    database.updateData(["isLiked": isLiked, "Likes": countLikes])
+                    database.updateData(["isLiked": isLiked, 
+                                         "Likes": countLikes]) // TODO: remake likes
                 }
             }){ _ in
                 UIView.animate(withDuration: 0.2) {
@@ -220,9 +222,9 @@ class ViewController: UIViewController, UICollectionViewDelegate, PostBottomBarV
                 self.postItems[index].post?.likeText = likeText
                 if let id = Auth.auth().currentUser?.uid {
                     let database = Firestore.firestore().collection(id).document("postItems").collection("postItem").document(self.postItems[index].post?.postId ?? "Default Value")
-                    database.updateData(["isLiked": isLiked, "Likes": countLikes])
+                    database.updateData(["isLiked": isLiked, 
+                                         "Likes": countLikes]) // TODO: remake likes
                 }
-                
                 
                 var snapshot = self.collectionDataSource.snapshot()
                 snapshot.deleteAllItems()
@@ -261,7 +263,15 @@ class ViewController: UIViewController, UICollectionViewDelegate, PostBottomBarV
                                 case .success(let data):
                                     if let imageOne = UIImage(data: data) {
                                         image = imageOne
-                                        self.fillItems(id: id!, bodyString: bodyString ?? "Error", name: name ?? "Error", image: image ?? UIImage(resource: .post), avatar: avatar, isLiked: isLiked, isBookmark: isBookmark, countLikes: countLikes, postId: postId)
+                                        self.fillItems(id: id!, 
+                                                       bodyString: bodyString ?? "Error",
+                                                       name: name ?? "Error",
+                                                       image: image ?? UIImage(resource: .post),
+                                                       avatar: avatar,
+                                                       isLiked: isLiked,
+                                                       isBookmark: isBookmark,
+                                                       countLikes: countLikes,
+                                                       postId: postId)
                                     }
                                 case .failure(let error):
                                     print(error.localizedDescription)
@@ -283,7 +293,7 @@ class ViewController: UIViewController, UICollectionViewDelegate, PostBottomBarV
         let rangeBody = (bodyText.string as NSString).range(of: name)
         bodyText.addAttribute(.font, value: UIFont.systemFont(ofSize: 17, weight: .semibold), range: rangeBody)
         
-//        self.titleItems.append(CellItem(story: StoryItem(image: UIImage(resource: .avatar1) ,title: name)))
+//        self.titleItems.append(CellItem(story: StoryItem(image: UIImage(resource: .avatar1) ,title: name))) // TODO: remove comments
         self.postItems.append(CellItem(post: PostItem(postId: postId, image: image, avatar: avatar, title: name, likeText: likeText, bodyText: bodyText, isLiked: isLiked, isBookmark: isBookmark, countLikes: countLikes)))
         
         var snapshot = collectionDataSource.snapshot()

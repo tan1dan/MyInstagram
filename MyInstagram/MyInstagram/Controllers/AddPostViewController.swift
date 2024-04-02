@@ -42,7 +42,7 @@ class AddPostViewController: UIViewController, PHPickerViewControllerDelegate, U
         view.addGestureRecognizer(tapGesture)
     }
     
-    @objc func backButtonTarget(){
+    @objc func backButtonTarget() {
         navigationController?.popViewController(animated: true)
         navigationController?.setNavigationBarHidden(true, animated: false)
     }
@@ -52,8 +52,14 @@ class AddPostViewController: UIViewController, PHPickerViewControllerDelegate, U
     }
     
     @objc func addPostButtonTarget(){
+        // TODO: try not to use equal operator with textView.textColor, a lot of things can change it
         if imageView.image != nil && textView.textColor != .lightGray {
-            let post = PostItem(image: imageView.image, title: "Name of Account", likeText:NSMutableAttributedString(string: "Likes: 0"), bodyText: NSMutableAttributedString(string: "NAME " + textView.text), isLiked: false, isBookmark: false)
+            let post = PostItem(image: imageView.image, 
+                                title: "Name of Account",
+                                likeText:NSMutableAttributedString(string: "Likes: 0"), 
+                                bodyText: NSMutableAttributedString(string: "NAME " + textView.text), 
+                                isLiked: false,
+                                isBookmark: false)
             if let image = post.image {
                 setData(image: image)
             }
@@ -114,7 +120,7 @@ class AddPostViewController: UIViewController, PHPickerViewControllerDelegate, U
     }
     //MARK: - PHPickerViewControllerDelegate
     func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
-        print(picker.nibBundle?.resourceURL)
+        print(picker.nibBundle?.resourceURL) // TODO: remove print
         if results.count == 1 {
             let itemProviders = results.map { $0.itemProvider }
             for item in itemProviders {
@@ -181,6 +187,7 @@ class AddPostViewController: UIViewController, PHPickerViewControllerDelegate, U
         ])
     }
     
+    // TODO: remake it as ViewController extension + maybe use default value to title
     private func showAlert(_ title: String, description: String, completion: ((Bool) -> Void)?) {
         let controller = UIAlertController(title: title, message: description, preferredStyle: .alert)
         controller.addAction(UIAlertAction(title: "Ok", style: .default, handler: { _ in
@@ -193,7 +200,7 @@ class AddPostViewController: UIViewController, PHPickerViewControllerDelegate, U
         var name: String?
         if let id = Auth.auth().currentUser?.uid {
             Firestore.firestore().document("\(id)/accountInformation").getDocument { snapshot, error in
-                if error == nil {
+                if error == nil { // TODO: use if let snapshot = snapshot?.data() only
                     if let snapshot = snapshot?.data() {
                         name = snapshot["name"] as? String
                         
@@ -213,13 +220,21 @@ class AddPostViewController: UIViewController, PHPickerViewControllerDelegate, U
                 let postId = UUID().uuidString
                 guard let imageData = image.jpegData(compressionQuality: 0.3) else { return }
                 let database = Firestore.firestore().collection(id).document("postItems").collection("postItem").document(postId)
-                database.setData(["postId": postId, "title" : name, "bodyText": "\(name): \(text)", "imageId": imageId, "isLiked": isLiked, "isBookmark": isBookmark, "Likes": countOfLikes])
+                database.setData(["postId": postId, 
+                                  "title" : name,
+                                  "bodyText": "\(name): \(text)",
+                                  "imageId": imageId,
+                                  "isLiked": isLiked,
+                                  "isBookmark": isBookmark,
+                                  "Likes": countOfLikes]) // TODO: keep thing the same, use likes insted Likes
                 StorageManager.shared.upload(id: imageId, image: imageData)
             }
         }))
         
     }
 }
+
+// TODO: use show alert from ViewController extension
 extension PHPickerViewController {
     func showAlert(_ title: String, description: String, completion: ((Bool) -> Void)?) {
         let controller = UIAlertController(title: title, message: description, preferredStyle: .alert)

@@ -82,7 +82,10 @@ class CommentsViewController: UIViewController {
                             let name = snapData["title"] as! String
                             let commentId = snapData["commentId"] as! String
                             let avatar = avatar
-                            self.fillItems(commentId: commentId, bodyString: bodyString, name: name, avatar: avatar)
+                            self.fillItems(commentId: commentId, 
+                                           bodyString: bodyString,
+                                           name: name,
+                                           avatar: avatar)
                         }
                     }
                 }
@@ -99,7 +102,7 @@ class CommentsViewController: UIViewController {
         let rangeBody = (bodyText.string as NSString).range(of: bodyString)
         bodyText.addAttribute(.font, value: UIFont.systemFont(ofSize: 17, weight: .regular), range: rangeBody)
         
-//        self.titleItems.append(CellItem(story: StoryItem(image: UIImage(resource: .avatar1) ,title: name)))
+//        self.titleItems.append(CellItem(story: StoryItem(image: UIImage(resource: .avatar1) ,title: name))) // TODO: remove comments
         self.commentItems.append(CellItem(comment: CommentItem(commentId: commentId, title: title, bodyTitle: bodyText, image: avatar)))
         
         self.tableView.reloadData()
@@ -183,7 +186,7 @@ class CommentsViewController: UIViewController {
 extension CommentsViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        tableView.separatorStyle = .none
+        tableView.separatorStyle = .none // TODO: move to viewDidLoad
         return commentItems.count
     }
     

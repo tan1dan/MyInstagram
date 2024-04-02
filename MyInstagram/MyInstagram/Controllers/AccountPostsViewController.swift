@@ -160,9 +160,9 @@ class AccountPostsViewController: UIViewController, PostBottomBarViewDelegate {
                 self.postItems[index].post?.likeText = likeText
                 if let id = Auth.auth().currentUser?.uid {
                     let database = Firestore.firestore().collection(id).document("postItems").collection("postItem").document(self.postItems[index].post?.postId ?? "Default Value")
-                    database.updateData(["isLiked": isLiked, "Likes": countLikes])
+                    database.updateData(["isLiked": isLiked,
+                                         "Likes": countLikes])
                 }
-                
                 
                 var snapshot = self.collectionDataSource.snapshot()
                 snapshot.deleteAllItems()
@@ -173,8 +173,7 @@ class AccountPostsViewController: UIViewController, PostBottomBarViewDelegate {
             }
             
         }
-        print(self.postItems[index].post?.isLiked)
-        
+        print(self.postItems[index].post?.isLiked) // TODO: remove print
     }
     
     func buttonBookmark(_ sender: PostBottomBarView) {
@@ -228,7 +227,7 @@ class AccountPostsViewController: UIViewController, PostBottomBarViewDelegate {
     }
     
     func buttonComment(_ sender: PostBottomBarView) {
-         let vc = CommentsViewController()
+        let vc = CommentsViewController()
         vc.postId = postItems[sender.cellIndex ?? 0].post?.postId
         navigationController?.present(vc, animated: true)
     }

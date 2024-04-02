@@ -13,8 +13,12 @@ import PhotosUI
 
 class AuthViewController: UIViewController, PHPickerViewControllerDelegate {
     var singUp: Bool = true {
-        willSet{
+        willSet {
+            
+            // TODO: use can use ternar operator (?:) for removing redundant if
             if newValue {
+                // TODO: remove comments
+
 //                nameField.isHidden = true
 //                titleLabel.text = "Login"
 //                buttonSwitchStatus.setTitle("Do you not have account?", for: .normal)
@@ -25,7 +29,9 @@ class AuthViewController: UIViewController, PHPickerViewControllerDelegate {
                 titleLabel.text = "Registration"
                 buttonSwitchStatus.setTitle("Do you have already account?", for: .normal)
                 buttonSing.setTitle("SignUp", for: .normal)
-            }else{
+            } else {
+                // TODO: remove comments
+
 //                nameField.isHidden = false
 //                titleLabel.text = "Registration"
 //                buttonSwitchStatus.setTitle("Do you have already account?", for: .normal)
@@ -82,7 +88,6 @@ class AuthViewController: UIViewController, PHPickerViewControllerDelegate {
         stackView.axis = .vertical
         stackView.distribution = .equalSpacing
         stackView.spacing = 10
-        
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -91,7 +96,7 @@ class AuthViewController: UIViewController, PHPickerViewControllerDelegate {
         imageViewLabelParameters()
     }
     
-    private func constraints(){
+    private func constraints() {
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
         stackView.translatesAutoresizingMaskIntoConstraints = false
         buttonSwitchStatus.translatesAutoresizingMaskIntoConstraints = false
@@ -136,12 +141,12 @@ class AuthViewController: UIViewController, PHPickerViewControllerDelegate {
             imageViewLabel.trailingAnchor.constraint(equalTo: imageView.trailingAnchor, constant: -10),
         ])
     }
-    @objc func buttonSwitchStatusTarget(){
+    @objc func buttonSwitchStatusTarget() {
         singUp.toggle()
     }
     
-    private func imageViewParameters(){
-        print(imageView.frame)
+    private func imageViewParameters() {
+        print(imageView.frame) // TODO: remove print
         imageView.isUserInteractionEnabled = true
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(imageViewTarget))
         imageView.addGestureRecognizer(tapGesture)
@@ -153,19 +158,19 @@ class AuthViewController: UIViewController, PHPickerViewControllerDelegate {
         imageView.contentMode = .scaleAspectFill
     }
     
-    private func imageViewLabelParameters(){
+    private func imageViewLabelParameters() {
         imageViewLabel.text = "Choose your photo of avatar"
         imageViewLabel.textColor = .systemBlue
         imageViewLabel.textAlignment = .center
         imageViewLabel.numberOfLines = 0
     }
     
-    @objc func imageViewTarget(){
+    @objc func imageViewTarget() {
         navigationController?.present(phPicker, animated: true)
     }
     
     func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
-        print(picker.nibBundle?.resourceURL)
+        print(picker.nibBundle?.resourceURL) // TODO: remove print
         if results.count == 1 {
             let itemProviders = results.map { $0.itemProvider }
             for item in itemProviders {
@@ -183,22 +188,23 @@ class AuthViewController: UIViewController, PHPickerViewControllerDelegate {
         }
         else if results.count >= 2 {
             picker.showAlert("Soon", description: "Adding >1 images to Post will be adding soon", completion: nil)
+            // TODO: missing dismiss?
         }
     }
 }
 extension AuthViewController{
    
-    @objc func buttonSignTarget(){
+    @objc func buttonSignTarget() {
         let name = nameField.text!
         let email = emailField.text!
         let password = passwordField.text!
         let image = imageView.image
-        if singUp{
+        if singUp {
             guard let image = image else {
                 showAlert(title: "Please", message: "Choose your image")
                 return
             }
-            if(!name.isEmpty && !email.isEmpty && !password.isEmpty){
+            if(!name.isEmpty && !email.isEmpty && !password.isEmpty) {
                 
                 Auth.auth().createUser(withEmail: email, password: password) { result, error in
                     
@@ -207,19 +213,21 @@ extension AuthViewController{
                         if let result = result {
                             let avatarID = UUID().uuidString
                             guard let imageData = image.jpegData(compressionQuality: 0.3) else { return }
-                            Firestore.firestore().document("\(result.user.uid)/accountInformation").setData(["name" : name, "email": email, "avatar": avatarID])
+                            Firestore.firestore().document("\(result.user.uid)/accountInformation").setData(["name" : name, 
+                                                                                                             "email": email,
+                                                                                                             "avatar": avatarID])
                             StorageManager.shared.upload(id: avatarID, image: imageData)
-                            print(result.user.uid)
+                            print(result.user.uid) // TODO: remove print
                         }
                         self.navigationController?.pushViewController(TabBarController(), animated: true)
                     }
                 }
                 
-            }else{
+            } else {
                 showAlert(title: "Please", message: "Enter your textfields")
             }
-        }else{
-            if (!email.isEmpty && !password.isEmpty){
+        } else {
+            if (!email.isEmpty && !password.isEmpty) {
                 Auth.auth().signIn(withEmail: email, password: password) { result, error in
                     if error == nil {
                         self.navigationController?.pushViewController(TabBarController(), animated: true)
@@ -232,7 +240,8 @@ extension AuthViewController{
             }
         }
     }
-    func showAlert(title: String, message: String){
+    // TODO: use extension ViewController instead
+    func showAlert(title: String, message: String) {
         let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "Ok", style: .default))
         present(alert, animated: true)

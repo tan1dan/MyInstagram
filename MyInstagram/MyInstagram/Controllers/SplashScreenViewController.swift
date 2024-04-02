@@ -23,17 +23,17 @@ class SplashScreenViewController: UIViewController {
             if user == nil {
                 nextVC = AuthViewController()
             }
-            else{
+            else {
                 nextVC = TabBarController()
             }
         }
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2){
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
             self.navigationController?.pushViewController(nextVC, animated: false)
             self.navigationController?.setNavigationBarHidden(true, animated: false)
         }
-        }
+    }
    
-    private func logoViewParameters(){
+    private func logoViewParameters() {
         logoView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(logoView)
         NSLayoutConstraint.activate([

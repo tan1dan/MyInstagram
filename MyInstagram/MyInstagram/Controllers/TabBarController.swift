@@ -41,11 +41,18 @@ class TabBarController: UITabBarController {
         
         let accountVC = AccountViewController()
         
-        let home = createNav(image: UIImage(systemName: "house"), vc: homeVC)
-        let search = createNav(image: UIImage(systemName: "magnifyingglass"), title: "Soon", vc: searchVC)
-        let addPost = createNav(image: UIImage(systemName: "plus.viewfinder"), vc: addPostVC)
-        let reels = createNav(image: UIImage(systemName: "play.square"), title: "Soon", vc: reelsVC)
-        let account = createNav(image: UIImage(systemName: "person.crop.circle"), vc: accountVC)
+        let home = createNav(image: UIImage(systemName: "house"), 
+                             vc: homeVC)
+        let search = createNav(image: UIImage(systemName: "magnifyingglass"), 
+                               title: "Soon",
+                               vc: searchVC)
+        let addPost = createNav(image: UIImage(systemName: "plus.viewfinder"), 
+                                vc: addPostVC)
+        let reels = createNav(image: UIImage(systemName: "play.square"), 
+                              title: "Soon",
+                              vc: reelsVC)
+        let account = createNav(image: UIImage(systemName: "person.crop.circle"), 
+                                vc: accountVC)
         
         self.setViewControllers([home, search, addPost, reels, account], animated: true)
     }
@@ -82,6 +89,7 @@ extension TabBarController: UITabBarControllerDelegate {
     
     func tabBarController(_ tabBarController: UITabBarController, didSelect viewController: UIViewController) {
     
+        // TODO: remove comments and empty if
         if tabBarController.selectedIndex == 4 {
 //            let homeVC = (tabBarController.viewControllers?.first as? UINavigationController)?.viewControllers.first as? ViewController
 //            let accountVC = (viewController as? UINavigationController)?.viewControllers.first as? AccountViewController
@@ -95,11 +103,13 @@ extension TabBarController: UITabBarControllerDelegate {
         }
     }
     
+    // TODO: use showAlert from extension ViewController instead
     func showAlert(alertController: UIAlertController, tabBarController: UITabBarController){
         let alert = alertController
         let action = UIAlertAction(title: "Ok", style: .default) { _ in
            
         }
+        
         alert.addAction(action)
         present(alert, animated: true)
     }

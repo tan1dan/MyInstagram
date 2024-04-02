@@ -8,10 +8,10 @@
 import UIKit
 import Firebase
 
-class AccountViewController: UIViewController, AccountNavBarViewDelegate, /*ToolBarViewDelegate,*/ SendItemsDelegate {
+class AccountViewController: UIViewController, AccountNavBarViewDelegate, /*ToolBarViewDelegate,*/ SendItemsDelegate { // TODO: remove comments
     
     let navBarView = AccountNavBarView()
-//    let toolBar = ToolBarView()
+//    let toolBar = ToolBarView() // TODO: remove comments
     let accountView = MainAccountViewUpdate()
     let refreshControl = UIRefreshControl()
     lazy var collectionView = UICollectionView(frame: .zero, collectionViewLayout: getCompositionalLayout())
@@ -27,7 +27,7 @@ class AccountViewController: UIViewController, AccountNavBarViewDelegate, /*Tool
         downloadAvatar()
         collectionViewParameters()
         view.backgroundColor = .systemBackground
-//        toolBar.delegate = self
+//        toolBar.delegate = self // TODO: remove comments
         navBarView.delegate = self
         
         let cellRegistration = UICollectionView.CellRegistration<AccountCollectionViewCell, CellItem> {
@@ -38,7 +38,7 @@ class AccountViewController: UIViewController, AccountNavBarViewDelegate, /*Tool
         collectionDataSource = UICollectionViewDiffableDataSource(collectionView: collectionView) { (collectionView: UICollectionView, indexPath: IndexPath, itemIdentifier: CellItem) -> UICollectionViewCell? in
             
             let cell = collectionView.dequeueConfiguredReusableCell(using: cellRegistration, for: indexPath, item: itemIdentifier)
-                return cell
+            return cell // TODO return cell in previous line
         }
         
         var accountSnapshot = NSDiffableDataSourceSnapshot<Section, CellItem>()
@@ -49,11 +49,11 @@ class AccountViewController: UIViewController, AccountNavBarViewDelegate, /*Tool
     
     private func constraints(){
         view.addSubview(navBarView)
-//        view.addSubview(toolBar)
+//        view.addSubview(toolBar) // TODO: remove comments
         view.addSubview(accountView)
         view.addSubview(collectionView)
         navBarView.translatesAutoresizingMaskIntoConstraints = false
-//        toolBar.translatesAutoresizingMaskIntoConstraints = false
+//        toolBar.translatesAutoresizingMaskIntoConstraints = false // TODO: remove comments
         accountView.translatesAutoresizingMaskIntoConstraints = false
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
@@ -72,6 +72,7 @@ class AccountViewController: UIViewController, AccountNavBarViewDelegate, /*Tool
             collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             collectionView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
             
+            // TODO: remove comments
 //            toolBar.leadingAnchor.constraint(equalTo: view.leadingAnchor),
 //            toolBar.trailingAnchor.constraint(equalTo: view.trailingAnchor),
 //            toolBar.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
@@ -113,14 +114,14 @@ class AccountViewController: UIViewController, AccountNavBarViewDelegate, /*Tool
         }
     }
     
-    private func collectionViewParameters(){
+    private func collectionViewParameters() {
         collectionView.register(AccountCollectionViewCell.self, forCellWithReuseIdentifier: AccountCollectionViewCell.id)
         collectionView.showsVerticalScrollIndicator = false
         collectionView.delegate = self
         collectionView.refreshControl = refreshControl
     }
     
-    
+    // TODO: is this method used?
     func buttonAddPostPress(_ sender: ToolBarView) {
         let addPostViewController = AddPostViewController()
         navigationController?.pushViewController(addPostViewController, animated: true)
@@ -146,7 +147,9 @@ class AccountViewController: UIViewController, AccountNavBarViewDelegate, /*Tool
         } catch {
             print(error)
         }
-        tabBarController?.navigationController?.setViewControllers([AuthViewController()], animated: false)
+//        #error("check nav")
+        tabBarController?.navigationController?.popToRootViewController(animated: true)
+//            .setViewControllers([AuthViewController()], animated: false)
     }
     
     @objc func refreshTarget() {
@@ -170,7 +173,7 @@ extension AccountViewController: UICollectionViewDelegate {
     
     func downlaodImage(avatar: UIImage){
         if let id = Auth.auth().currentUser?.uid {
-            Firestore.firestore().collection(id).document("postItems").collection("postItem").getDocuments { snapshot, error in
+            Firestore.firestore().collection(id).document("postItems").collection("postItem").getDocuments { snapshot, error in // TODO: memory leak
                 if error == nil {
                     if let snapshot = snapshot?.documents {
                         self.accountItems = []
@@ -192,7 +195,15 @@ extension AccountViewController: UICollectionViewDelegate {
                                 case .success(let data):
                                     if let imageOne = UIImage(data: data) {
                                         image = imageOne
-                                        self.fillItems(id: id!, bodyString: bodyString ?? "Error", name: name ?? "Error", image: image ?? UIImage(resource: .post), avatar: avatar, isLiked: isLiked, isBookmark: isBookmark, countLikes: countLikes, postId: postId)
+                                        self.fillItems(id: id!, 
+                                                       bodyString: bodyString ?? "Error",
+                                                       name: name ?? "Error",
+                                                       image: image ?? UIImage(resource: .post),
+                                                       avatar: avatar,
+                                                       isLiked: isLiked,
+                                                       isBookmark: isBookmark,
+                                                       countLikes: countLikes,
+                                                       postId: postId)
                                     }
                                 case .failure(let error):
                                     print(error.localizedDescription)
@@ -213,7 +224,7 @@ extension AccountViewController: UICollectionViewDelegate {
         let rangeBody = (bodyText.string as NSString).range(of: name)
         bodyText.addAttribute(.font, value: UIFont.systemFont(ofSize: 17, weight: .semibold), range: rangeBody)
         
-//        self.titleItems.append(CellItem(story: StoryItem(image: UIImage(resource: .avatar1) ,title: name)))
+//        self.titleItems.append(CellItem(story: StoryItem(image: UIImage(resource: .avatar1) ,title: name)))     // TODO: is this method used?
         self.postItems.append(CellItem(post: PostItem(postId: postId, image: image, avatar: avatar, title: name, likeText: likeText, bodyText: bodyText, isLiked: isLiked, isBookmark: isBookmark, countLikes: countLikes)))
         self.accountItems.append(CellItem(account: AccountItem(id: UUID().uuidString, image: image)))
         var snapshot = collectionDataSource.snapshot()
@@ -227,7 +238,7 @@ extension AccountViewController: UICollectionViewDelegate {
     func downloadAvatar(){
         if let id = Auth.auth().currentUser?.uid {
             
-            Firestore.firestore().collection("\(id)").document("accountInformation").getDocument { snapshot, error in
+            Firestore.firestore().collection("\(id)").document("accountInformation").getDocument { snapshot, error in // TODO: memory leak
                 if error == nil {
                     if let snapData = snapshot?.data() {
                         let avatarID = snapData["avatar"] as! String
@@ -244,7 +255,7 @@ extension AccountViewController: UICollectionViewDelegate {
                         }
                     }
                 } else {
-                    print(error?.localizedDescription)
+                    print(error?.localizedDescription) // TODO: Remove print, add alert, toast, image or text to show user message
                 }
             }
         }
