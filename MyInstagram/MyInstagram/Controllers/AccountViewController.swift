@@ -134,8 +134,7 @@ class AccountViewController: UIViewController, AccountNavBarViewDelegate,  SendI
             print(error)
         }
 //        #error("check nav")
-        tabBarController?.navigationController?.popToRootViewController(animated: true)
-//            .setViewControllers([AuthViewController()], animated: false)
+        tabBarController?.navigationController?.setViewControllers([AuthViewController()], animated: false)
     }
     
     @objc func refreshTarget() {
@@ -159,11 +158,11 @@ extension AccountViewController: UICollectionViewDelegate {
     
     func downlaodImage(avatar: UIImage){
         if let id = Auth.auth().currentUser?.uid {
-            Firestore.firestore().collection(id).document("postItems").collection("postItem").getDocuments { snapshot, error in // TODO: memory leak
+            Firestore.firestore().collection(id).document("postItems").collection("postItem").getDocuments { [weak self] snapshot, error in
                 if error == nil {
                     if let snapshot = snapshot?.documents {
-                        self.accountItems = []
-                        self.postItems = []
+                        self?.accountItems = []
+                        self?.postItems = []
                         for snap in snapshot {
                             let snapData = snap.data()
                             let id = snapshot.firstIndex(of: snap)
@@ -176,12 +175,12 @@ extension AccountViewController: UICollectionViewDelegate {
                             let postId = snapData["postId"] as! String
                             var image: UIImage?
                             let avatar = avatar
-                            StorageManager.shared.download(id: imageId) { result in
+                            StorageManager.shared.download(id: imageId) { [weak self] result in
                                 switch result {
                                 case .success(let data):
                                     if let imageOne = UIImage(data: data) {
                                         image = imageOne
-                                        self.fillItems(id: id!, 
+                                        self?.fillItems(id: id!,
                                                        bodyString: bodyString ?? "Error",
                                                        name: name ?? "Error",
                                                        image: image ?? UIImage(resource: .post),
@@ -212,6 +211,7 @@ extension AccountViewController: UICollectionViewDelegate {
         
         self.postItems.append(CellItem(post: PostItem(postId: postId, image: image, avatar: avatar, title: name, likeText: likeText, bodyText: bodyText, isLiked: isLiked, isBookmark: isBookmark, countLikes: countLikes)))
         self.accountItems.append(CellItem(account: AccountItem(id: UUID().uuidString, image: image)))
+        self.accountView.labelNumberOfPosts.attributedText = self.accountView.mutableAttributedString(string: "\(self.accountItems.count)")
         var snapshot = collectionDataSource.snapshot()
         snapshot.deleteAllItems()
         snapshot.appendSections([.first])
@@ -223,7 +223,7 @@ extension AccountViewController: UICollectionViewDelegate {
     func downloadAvatar(){
         if let id = Auth.auth().currentUser?.uid {
             
-            Firestore.firestore().collection("\(id)").document("accountInformation").getDocument { snapshot, error in // TODO: memory leak
+            Firestore.firestore().collection("\(id)").document("accountInformation").getDocument { [weak self] snapshot, error in
                 if error == nil {
                     if let snapData = snapshot?.data() {
                         let avatarID = snapData["avatar"] as! String
@@ -231,8 +231,8 @@ extension AccountViewController: UICollectionViewDelegate {
                             switch result {
                             case .success(let data):
                                 if let avatar = UIImage(data: data) {
-                                    self.downlaodImage(avatar: avatar)
-                                    self.accountView.avatarImageView.image = avatar
+                                    self?.downlaodImage(avatar: avatar)
+                                    self?.accountView.avatarImageView.image = avatar
                                 }
                             case .failure(let error):
                                 print(error.localizedDescription)
@@ -240,7 +240,7 @@ extension AccountViewController: UICollectionViewDelegate {
                         }
                     }
                 } else {
-                    self.showAlertVC("Error", description: "\(error?.localizedDescription ?? "Some error")") { bool in
+                    self?.showAlertVC("Error", description: "\(error?.localizedDescription ?? "Some error")") { bool in
                         
                     }
                 }

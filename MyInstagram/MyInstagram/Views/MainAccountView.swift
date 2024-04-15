@@ -37,16 +37,6 @@ class MainAccountView: UIView {
         
     }
     
-    override func layoutSubviews() {
-        super.layoutSubviews()
-        
-//        defer { print(avatarImageView.layer.frame.size.width)}
-//        print(avatarImageView.layer.frame.size.width)
-//        avatarImageView.layer.cornerRadius = CGFloat(avatarImageView.layer.bounds.size.width / 2)
-//        avatarImageView.layer.masksToBounds = true
-        
-    }
-    
     override func layoutIfNeeded() {
         super.layoutIfNeeded()
         print(avatarImageView.layer.frame.size.width)
@@ -120,10 +110,10 @@ class MainAccountView: UIView {
     
     private func labelsParameters(){
         if let id = Auth.auth().currentUser?.uid {
-            Firestore.firestore().document("\(id)/accountInformation").getDocument { snapshot, error in
+            Firestore.firestore().document("\(id)/accountInformation").getDocument { [weak self] snapshot, error in
                 if error == nil {
                     if let snapshot = snapshot?.data() {
-                        self.nameLabel.text = snapshot["name"] as? String
+                        self?.nameLabel.text = snapshot["name"] as? String
                     }
                 }
             }

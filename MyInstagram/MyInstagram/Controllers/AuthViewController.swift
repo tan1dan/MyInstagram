@@ -15,7 +15,6 @@ class AuthViewController: UIViewController, PHPickerViewControllerDelegate {
     var singUp: Bool = true {
         willSet {
             
-            // TODO: use can use ternar operator (?:) for removing redundant if
             if newValue {
                 
                 nameField.isHidden = false
@@ -55,6 +54,7 @@ class AuthViewController: UIViewController, PHPickerViewControllerDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
+        view.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard)))
         navigationController?.setNavigationBarHidden(true, animated: false)
         constraints()
         
@@ -71,6 +71,7 @@ class AuthViewController: UIViewController, PHPickerViewControllerDelegate {
         emailField.borderStyle = .roundedRect
         passwordField.placeholder = "Enter your password"
         passwordField.borderStyle = .roundedRect
+        passwordField.isSecureTextEntry = true
         nameField.placeholder = "Enter your name"
         nameField.borderStyle = .roundedRect
         stackView.axis = .vertical
@@ -160,11 +161,11 @@ class AuthViewController: UIViewController, PHPickerViewControllerDelegate {
         if results.count == 1 {
             let itemProviders = results.map { $0.itemProvider }
             for item in itemProviders {
-                item.loadObject(ofClass: UIImage.self) { image, error in
+                item.loadObject(ofClass: UIImage.self) { [weak self] image, error in
                     guard let image = image as? UIImage else {return}
                     DispatchQueue.main.async {
-                        self.imageView.image = image
-                        self.imageViewLabel.removeFromSuperview()
+                        self?.imageView.image = image
+                        self?.imageViewLabel.removeFromSuperview()
                     }
                 }
             }
@@ -174,8 +175,6 @@ class AuthViewController: UIViewController, PHPickerViewControllerDelegate {
         }
         else if results.count >= 2 {
             picker.showAlert("Soon", description: "Adding >1 images to Post will be adding soon", completion: nil)
-            // TODO: missing dismiss?
-            // No
         }
     }
 }
@@ -193,7 +192,7 @@ extension AuthViewController{
             }
             if(!name.isEmpty && !email.isEmpty && !password.isEmpty) {
                 
-                Auth.auth().createUser(withEmail: email, password: password) { result, error in
+                Auth.auth().createUser(withEmail: email, password: password) { [weak self] result, error in
                     
                     if error == nil {
                         
@@ -205,7 +204,7 @@ extension AuthViewController{
                                                                                                              "avatar": avatarID])
                             StorageManager.shared.upload(id: avatarID, image: imageData)
                         }
-                        self.navigationController?.pushViewController(TabBarController(), animated: true)
+                        self?.navigationController?.pushViewController(TabBarController(), animated: true)
                     }
                 }
                 
@@ -214,11 +213,11 @@ extension AuthViewController{
             }
         } else {
             if (!email.isEmpty && !password.isEmpty) {
-                Auth.auth().signIn(withEmail: email, password: password) { result, error in
+                Auth.auth().signIn(withEmail: email, password: password) { [weak self] result, error in
                     if error == nil {
-                        self.navigationController?.pushViewController(TabBarController(), animated: true)
+                        self?.navigationController?.pushViewController(TabBarController(), animated: true)
                     } else {
-                        self.showAlert(title: "Error", message: "Wrong password or login")
+                        self?.showAlert(title: "Error", message: "Wrong password or login")
                     }
                 }
             } else {
@@ -226,10 +225,16 @@ extension AuthViewController{
             }
         }
     }
-    // TODO: use extension ViewController instead
+}
+
+extension AuthViewController {
     func showAlert(title: String, message: String) {
         let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "Ok", style: .default))
         present(alert, animated: true)
+    }
+    
+    @objc func dismissKeyboard() {
+        view.endEditing(true)
     }
 }

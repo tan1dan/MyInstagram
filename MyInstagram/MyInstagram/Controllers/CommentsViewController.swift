@@ -74,17 +74,17 @@ class CommentsViewController: UIViewController {
     
     func downlaodImage(avatar: UIImage){
         if let id = Auth.auth().currentUser?.uid {
-            Firestore.firestore().collection(id).document("postItems").collection("postItem").document(self.postId ?? "").collection("commentItems").getDocuments { snapshot, error in
+            Firestore.firestore().collection(id).document("postItems").collection("postItem").document(self.postId ?? "").collection("commentItems").getDocuments { [weak self] snapshot, error in
                 if error == nil {
                     if let snapshot = snapshot?.documents {
-                        self.commentItems = []
+                        self?.commentItems = []
                         for snap in snapshot {
                             let snapData = snap.data()
                             let bodyString = snapData["body"] as! String
                             let name = snapData["title"] as! String
                             let commentId = snapData["commentId"] as! String
                             let avatar = avatar
-                            self.fillItems(commentId: commentId, 
+                            self?.fillItems(commentId: commentId,
                                            bodyString: bodyString,
                                            name: name,
                                            avatar: avatar)
@@ -112,17 +112,17 @@ class CommentsViewController: UIViewController {
     func downloadAvatar(){
         if let id = Auth.auth().currentUser?.uid {
             
-            Firestore.firestore().collection("\(id)").document("accountInformation").getDocument { snapshot, error in
+            Firestore.firestore().collection("\(id)").document("accountInformation").getDocument { [weak self] snapshot, error in
                 if error == nil {
                     if let snapData = snapshot?.data() {
                         let avatarID = snapData["avatar"] as! String
-                        StorageManager.shared.download(id: avatarID) { result in
+                        StorageManager.shared.download(id: avatarID) { [weak self] result in
                             switch result {
                             case .success(let data):
                                 if let avatar = UIImage(data: data) {
-                                    self.downlaodImage(avatar: avatar)
-                                    self.avatar = avatar
-                                    self.bottomView.avatarImageView.image = avatar
+                                    self?.downlaodImage(avatar: avatar)
+                                    self?.avatar = avatar
+                                    self?.bottomView.avatarImageView.image = avatar
                                 }
                             case .failure(let error):
                                 print(error.localizedDescription)
@@ -157,15 +157,15 @@ class CommentsViewController: UIViewController {
         var name: String?
         var text = bottomView.commentField.text
         if let id = Auth.auth().currentUser?.uid {
-            Firestore.firestore().document("\(id)/accountInformation").getDocument { snapshot, error in
+            Firestore.firestore().document("\(id)/accountInformation").getDocument { [weak self] snapshot, error in
                 if error == nil {
                     if let snapshot = snapshot?.data() {
                         name = snapshot["name"] as? String
                         guard let name = name else {return}
                         guard let text = text else {return}
                         let commentId = UUID().uuidString
-                        self.fillItems(commentId: commentId, bodyString: text, name: name, avatar: self.avatar ?? UIImage())
-                        self.bottomView.commentField.text = ""
+                        self?.fillItems(commentId: commentId, bodyString: text, name: name, avatar: self?.avatar ?? UIImage())
+                        self?.bottomView.commentField.text = ""
                     }
                 }
             }
