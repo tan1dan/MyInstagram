@@ -97,7 +97,6 @@ class MainAccountViewUpdate: UIView {
             nameLabel.centerXAnchor.constraint(equalTo: avatarImageView.centerXAnchor),
             nameLabel.heightAnchor.constraint(equalToConstant: 15),
             
-//            labelsView.topAnchor.constraint(equalTo: topAnchor),
             labelsView.centerYAnchor.constraint(equalTo: avatarImageView.centerYAnchor),
             labelsView.leadingAnchor.constraint(equalTo: avatarImageView.trailingAnchor),
             labelsView.trailingAnchor.constraint(equalTo: trailingAnchor),
@@ -109,10 +108,10 @@ class MainAccountViewUpdate: UIView {
     
     private func labelsParameters(){
         if let id = Auth.auth().currentUser?.uid {
-            Firestore.firestore().document("\(id)/accountInformation").getDocument { snapshot, error in
+            Firestore.firestore().document("\(id)/accountInformation").getDocument { [weak self] snapshot, error in
                 if error == nil {
                     if let snapshot = snapshot?.data() {
-                        self.nameLabel.text = snapshot["name"] as? String
+                        self?.nameLabel.text = snapshot["name"] as? String
                     }
                 }
             }

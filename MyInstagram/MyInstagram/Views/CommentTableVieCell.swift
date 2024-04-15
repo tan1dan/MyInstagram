@@ -33,7 +33,6 @@ class CommentTableViewCell: UITableViewCell {
             
             titleLabel.topAnchor.constraint(equalTo: topAnchor, constant: 15),
             titleLabel.leadingAnchor.constraint(equalTo: avatarView.trailingAnchor, constant: 10),
-//            titleLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -5),
             
             bodyLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 5),
             bodyLabel.leadingAnchor.constraint(equalTo: avatarView.trailingAnchor, constant: 10),
@@ -48,10 +47,5 @@ class CommentTableViewCell: UITableViewCell {
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
-    }
-    
-    override func layoutSubviews() {
-        super.layoutSubviews()
-        
     }
 }

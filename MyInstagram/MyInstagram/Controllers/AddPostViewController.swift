@@ -122,11 +122,11 @@ class AddPostViewController: UIViewController, PHPickerViewControllerDelegate, U
         if results.count == 1 {
             let itemProviders = results.map { $0.itemProvider }
             for item in itemProviders {
-                item.loadObject(ofClass: UIImage.self) { image, error in
+                item.loadObject(ofClass: UIImage.self) { [weak self] image, error in
                     guard let image = image as? UIImage else {return}
                     DispatchQueue.main.async {
-                        self.imageView.image = image
-                        self.imageViewLabel.removeFromSuperview()
+                        self?.imageView.image = image
+                        self?.imageViewLabel.removeFromSuperview()
                     }
                 }
             }
@@ -189,11 +189,9 @@ class AddPostViewController: UIViewController, PHPickerViewControllerDelegate, U
     private func setData(image: UIImage){
         var name: String?
         if let id = Auth.auth().currentUser?.uid {
-            Firestore.firestore().document("\(id)/accountInformation").getDocument { snapshot, error in
-                
+            Firestore.firestore().document("\(id)/accountInformation").getDocument { [weak self] snapshot, error in
                 if let snapshot = snapshot?.data() {
                     name = snapshot["name"] as? String
-                    
                 }
                 
             }

@@ -19,17 +19,17 @@ class SplashScreenViewController: UIViewController {
         var nextVC: UIViewController = UIViewController()
         view.backgroundColor = .systemBackground
         logoViewParameters()
-        Auth.auth().addStateDidChangeListener { auth, user in
+        Auth.auth().addStateDidChangeListener { [weak self] auth, user in
             if user == nil {
                 nextVC = AuthViewController()
+                self?.navigationController?.pushViewController(nextVC, animated: false)
+                self?.navigationController?.setNavigationBarHidden(true, animated: false)
             }
             else {
                 nextVC = TabBarController()
+                self?.navigationController?.pushViewController(nextVC, animated: false)
+                self?.navigationController?.setNavigationBarHidden(true, animated: false)
             }
-        }
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-            self.navigationController?.pushViewController(nextVC, animated: false)
-            self.navigationController?.setNavigationBarHidden(true, animated: false)
         }
     }
    

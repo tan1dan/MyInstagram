@@ -87,9 +87,6 @@ extension TabBarController: UITabBarControllerDelegate {
         return true
     }
     
-    func tabBarController(_ tabBarController: UITabBarController, didSelect viewController: UIViewController) {
-    
-    }
     
     // TODO: use showAlert from extension ViewController instead
     func showAlert(alertController: UIAlertController, tabBarController: UITabBarController){
@@ -97,7 +94,6 @@ extension TabBarController: UITabBarControllerDelegate {
         let action = UIAlertAction(title: "Ok", style: .default) { _ in
            
         }
-        
         alert.addAction(action)
         present(alert, animated: true)
     }

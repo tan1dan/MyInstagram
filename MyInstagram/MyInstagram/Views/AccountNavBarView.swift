@@ -109,10 +109,6 @@ class AccountNavBarView: UIView {
     
     func labelParameters(){
         label.text = "Instagram"
-//        for family in UIFont.familyNames.sorted(){
-//            let names = UIFont.fontNames(forFamilyName: family)
-//            print("Family: \(family), names: \(names)")
-//        }
         if let lobsterFont = UIFont(name: "Lobster-Regular", size: 26.0) {
             label.font = lobsterFont
         }

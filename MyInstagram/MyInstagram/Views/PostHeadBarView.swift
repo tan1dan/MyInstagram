@@ -59,8 +59,6 @@ class PostHeadBarView: UIView {
     }
     
     private func authorAvatarParameters(){
-//        authorAvatar.image = UIImage(resource: .avatar1)
-        
         print(CGFloat(authorAvatar.frame.width / 2))
         authorAvatar.contentMode = .scaleToFill
     }

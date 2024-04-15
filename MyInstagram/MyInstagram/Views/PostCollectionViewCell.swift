@@ -43,16 +43,6 @@ class PostCollectionViewCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    override func layoutSubviews() {
-        super.layoutSubviews()
-        
-    }
-    
-    override func prepareForReuse() {
-        super.prepareForReuse()
-        
-    }
-    
     private func constraints(){
         postHeadBarView.translatesAutoresizingMaskIntoConstraints = false
         imageView.translatesAutoresizingMaskIntoConstraints = false

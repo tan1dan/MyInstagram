@@ -233,11 +233,11 @@ class ViewController: UIViewController, UICollectionViewDelegate, PostBottomBarV
     
     func downlaodImage(avatar: UIImage){
         if let id = Auth.auth().currentUser?.uid {
-            Firestore.firestore().collection(id).document("postItems").collection("postItem").getDocuments { snapshot, error in
+            Firestore.firestore().collection(id).document("postItems").collection("postItem").getDocuments { [weak self] snapshot, error in
                 if error == nil {
                     if let snapshot = snapshot?.documents {
-                        self.titleItems = []
-                        self.postItems = []
+                        self?.titleItems = []
+                        self?.postItems = []
                         for snap in snapshot {
                             let snapData = snap.data()
                             let id = snapshot.firstIndex(of: snap)
@@ -250,12 +250,12 @@ class ViewController: UIViewController, UICollectionViewDelegate, PostBottomBarV
                             let postId = snapData["postId"] as! String
                             var image: UIImage?
                             let avatar = avatar
-                            StorageManager.shared.download(id: imageId) { result in
+                            StorageManager.shared.download(id: imageId) { [weak self] result in
                                 switch result {
                                 case .success(let data):
                                     if let imageOne = UIImage(data: data) {
                                         image = imageOne
-                                        self.fillItems(id: id!, 
+                                        self?.fillItems(id: id!,
                                                        bodyString: bodyString ?? "Error",
                                                        name: name ?? "Error",
                                                        image: image ?? UIImage(resource: .post),
@@ -298,15 +298,15 @@ class ViewController: UIViewController, UICollectionViewDelegate, PostBottomBarV
     func downloadAvatar(){
         if let id = Auth.auth().currentUser?.uid {
             
-            Firestore.firestore().collection("\(id)").document("accountInformation").getDocument { snapshot, error in
+            Firestore.firestore().collection("\(id)").document("accountInformation").getDocument { [weak self] snapshot, error in
                 if error == nil {
                     if let snapData = snapshot?.data() {
                         let avatarID = snapData["avatar"] as! String
-                        StorageManager.shared.download(id: avatarID) { result in
+                        StorageManager.shared.download(id: avatarID) { [weak self] result in
                             switch result {
                             case .success(let data):
                                 if let avatar = UIImage(data: data) {
-                                    self.downlaodImage(avatar: avatar)
+                                    self?.downlaodImage(avatar: avatar)
                                 }
                             case .failure(let error):
                                 print(error.localizedDescription)
